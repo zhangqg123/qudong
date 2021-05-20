@@ -75,10 +75,14 @@ public class DCHKSUM {
 //		String putIn = "210360470000";
 //		String putIn = "21036000d03000d201f40014003200000000012c0096032000c800e60078";
 //		String putIn= "$016\r"; //7000d
-		String putIn= "Q1\r"; //科士达
+//		String putIn= "Q1\r"; //科士达
 
-		byte[] aa = putIn.toUpperCase().getBytes();
-		System.out.println(aa);
+//		byte[] aa = putIn.toUpperCase().getBytes();
+//		System.out.println(aa);
+		int a = 32;
+		char cc = (char) a;
+		System.out.println(cc);
+
 /*		
 		String ret = null;
 		try {

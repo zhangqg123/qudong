@@ -146,7 +146,7 @@ abstract public class QwertAsciiUtils{
         return msgQueue;
     }
 
-    public static ByteQueue getKstarReturnMessage(ByteQueue queue) throws QudongTransportException {
+    public static String getKstarReturnMessage(ByteQueue queue) throws QudongTransportException {
         // Validate that the message starts with the required indicator
         byte b = queue.pop();
         if (b != KSTAR_RETURN_START)
@@ -165,9 +165,9 @@ abstract public class QwertAsciiUtils{
         // Pop the end indicator off of the queue
         queue.pop(END.length);
         // Convert to unascii
-        QwertAsciiUtils.fromAsciiKstar(msgQueue, msgQueue.size());
+        String msg=QwertAsciiUtils.fromAsciiKstar(msgQueue, msgQueue.size());
 
-        return msgQueue;
+        return msg;
     }
 
     /**
@@ -300,10 +300,12 @@ abstract public class QwertAsciiUtils{
         for (int i = 0; i < len; i++)
             queue.push(readAsciiM7000(queue));
     }
-    public static void fromAsciiKstar(ByteQueue queue, int asciiLen) {
+    public static String fromAsciiKstar(ByteQueue queue, int asciiLen) {
         int len = asciiLen ;
+        StringBuilder sb= new StringBuilder();
         for (int i = 0; i < len; i++)
-            queue.push(readAsciiM7000(queue));
+            sb.append(readAsciiKstar(queue));
+        return sb.toString();
     }
 
     private static byte readAsciiM7000(ByteQueue from) {
@@ -311,6 +313,19 @@ abstract public class QwertAsciiUtils{
         byte a2 = lookupUnascii[from.pop()];
         return a2;
 //        return (byte) ((lookupUnascii[from.pop()] << 4) | lookupUnascii[from.pop()]);
+    }
+    private static String readAsciiKstar(ByteQueue from) {
+//        int a1 = (lookupUnascii[from.pop()] << 4);
+        byte a1 = from.pop();
+        if(a1==46){
+            return ".";
+        }
+        if(a1==32){
+            return " ";
+        }
+        byte a2 = lookupUnascii[a1];
+        String a3 = "" + a2;
+        return a3;
     }
     private static byte readAscii(ByteQueue from) {
         return (byte) ((lookupUnascii[from.pop()] << 4) | lookupUnascii[from.pop()]);

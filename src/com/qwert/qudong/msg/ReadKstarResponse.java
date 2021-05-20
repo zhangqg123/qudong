@@ -33,6 +33,8 @@ import com.qwert.qudong.sero.util.queue.ByteQueue;
  */
 public class ReadKstarResponse extends ReadResponse {
 	private byte[] data;
+	private String msg;
+
     ReadKstarResponse(int slaveId, byte[] data) throws QudongTransportException {
         super(slaveId, data);
         this.data=data;
@@ -41,11 +43,14 @@ public class ReadKstarResponse extends ReadResponse {
     ReadKstarResponse(int slaveId) throws QudongTransportException {
         super(slaveId);
     }
-
+    ReadKstarResponse(int slaveId,String msg) throws QudongTransportException {
+        super(slaveId);
+        this.msg=msg;
+    }
     /** {@inheritDoc} */
     @Override
     public byte getFunctionCode() {
-        return FunctionCode.READ_M7000_REGISTERS;
+        return FunctionCode.READ_KSTAR_REGISTERS;
     }
 
     /** {@inheritDoc} */
@@ -58,30 +63,15 @@ public class ReadKstarResponse extends ReadResponse {
     }
 
 	
-	public byte[] getRetData() {
+	public String getMessage() {
 		// TODO Auto-generated method stub
-		return data;
+		return msg;
 	}
 
 	
     @Override
     final protected void writeImpl(ByteQueue queue) {
     	if(simulator==0) {
-	    	byte[] bur = new byte[2];
-			queue.pop(bur,0,2);
-	  		queue.push("02");
-			queue.push("00");
-			queue.push(bur);
-	  		queue.push("06");
-			queue.push("00");
-	    	queue.push("04");
-	   		queue.push("02");
-	        String lenid = chkLength(48);
-	        byte[] tmp = lenid.toUpperCase().getBytes();
-	   		queue.push(tmp);
-			byte[] rd = getRetData();
-			queue.push(rd);
-//			QwertAsciiUtils.getAsciiData(queue,2);
 		}else {
             writeResponse(queue);
 		}
@@ -115,5 +105,5 @@ public class ReadKstarResponse extends ReadResponse {
     public short[] getShortData() {
       return convertToShorts(data);
   }
-	
+
 }

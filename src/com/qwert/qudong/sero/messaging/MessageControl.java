@@ -245,8 +245,8 @@ public class MessageControl implements DataConsumer {
      */
     public void send(OutgoingResponseMessage response) throws IOException {
 //		String putIn = "~21036000d03000d201f40014003200000000012c0096032000c800e60078f3f3\r\n";
-        String putIn = "!000000\r";
-//        String putIn = "(208.4 140.0 208.4 034 59.9 2.05 35.0 00110000\r";
+//        String putIn = "!000000\r";
+        String putIn = "(208.4 140.0 208.4 034 59.9 2.05 35.0 00110000\r";
 		byte[] data = putIn.toUpperCase().getBytes();
         write(data);
 //        write(response.getMessageData2(2));

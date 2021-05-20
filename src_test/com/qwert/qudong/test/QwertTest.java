@@ -40,8 +40,8 @@ public class QwertTest {
             int cid2 = 42;
             int lenid = 0;
  //           readDianzongTest(master, ver,slaveId, cid1,cid2,lenid);
-           read7000Test(master,1,6);
-//            readkstarTest(master,1,51,1);
+//           read7000Test(master,1,6);
+            readkstarTest(master,1,51,1);
 
  /*           BatchRead<String> batch = new BatchRead<String>();
 			batch.addLocator("10",	BaseLocator.holdingRegister(slaveId, 10, DataType.TWO_BYTE_INT_SIGNED));
@@ -96,7 +96,7 @@ public class QwertTest {
             if (response.isException())
                 System.out.println("Exception response: message=" + response.getExceptionMessage());
             else
-                System.out.println(Arrays.toString(response.getShortData()));
+                System.out.println(response.getMessage());
         }
         catch (QudongTransportException e) {
             e.printStackTrace();

@@ -53,6 +53,7 @@ abstract public class QwertResponse extends QwertMessage {
         	b = queue.peek(0);
     	}
         int slaveId=1;
+        String msg=null;
         if (b == QwertAsciiUtils.START) {
             functionCode = FunctionCode.READ_DIANZONG_REGISTERS;
             queue=QwertAsciiUtils.getUnDianzongMessage(queue);
@@ -63,7 +64,7 @@ abstract public class QwertResponse extends QwertMessage {
             slaveId = 1;
         }else if (b == QwertAsciiUtils.KSTAR_RETURN_START) {
             functionCode = FunctionCode.READ_KSTAR_REGISTERS;
-            queue=QwertAsciiUtils.getKstarReturnMessage(queue);
+            msg=QwertAsciiUtils.getKstarReturnMessage(queue);
             slaveId = 1;
         }else{
             functionCode = FunctionCode.READ_DIANZONG_REGISTERS;
@@ -88,7 +89,10 @@ abstract public class QwertResponse extends QwertMessage {
             response = new ReadDianzongResponse(slaveId);
         }else if (functionCode == FunctionCode.READ_M7000_REGISTERS)
             response = new ReadM7000Response(slaveId);
-        else if (functionCode == FunctionCode.REPORT_SLAVE_ID)
+        else if (functionCode == FunctionCode.READ_KSTAR_REGISTERS) {
+            response = new ReadKstarResponse(slaveId, msg);
+            return response;
+        }else if (functionCode == FunctionCode.REPORT_SLAVE_ID)
             response = new ReportSlaveIdResponse(slaveId);
         else
             throw new IllegalFunctionException(functionCode, slaveId);
