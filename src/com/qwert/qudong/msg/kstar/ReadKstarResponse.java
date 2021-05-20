@@ -18,11 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.qwert.qudong.msg;
+package com.qwert.qudong.msg.kstar;
 
 import com.qwert.qudong.base.QwertUtils;
 import com.qwert.qudong.code.FunctionCode;
 import com.qwert.qudong.exception.QudongTransportException;
+import com.qwert.qudong.msg.ReadResponse;
 import com.qwert.qudong.sero.util.queue.ByteQueue;
 
 /**
@@ -43,7 +44,7 @@ public class ReadKstarResponse extends ReadResponse {
     ReadKstarResponse(int slaveId) throws QudongTransportException {
         super(slaveId);
     }
-    ReadKstarResponse(int slaveId,String msg) throws QudongTransportException {
+    public ReadKstarResponse(int slaveId, String msg) throws QudongTransportException {
         super(slaveId);
         this.msg=msg;
     }

@@ -9,6 +9,10 @@ import com.qwert.qudong.ip.IpParameters;
 import com.qwert.qudong.msg.*;
 import com.qwert.qudong.msg.ReadM7000Request;
 import com.qwert.qudong.msg.ReadM7000Response;
+import com.qwert.qudong.msg.delta.ReadDeltaRequest;
+import com.qwert.qudong.msg.delta.ReadDeltaResponse;
+import com.qwert.qudong.msg.kstar.ReadKstarRequest;
+import com.qwert.qudong.msg.kstar.ReadKstarResponse;
 import com.qwert.qudong.serial.QwertSerialPortWrapper;
 
 public class QwertTest {
@@ -41,7 +45,8 @@ public class QwertTest {
             int lenid = 0;
  //           readDianzongTest(master, ver,slaveId, cid1,cid2,lenid);
 //           read7000Test(master,1,6);
-            readkstarTest(master,1,51,1);
+//            readkstarTest(master,1,51,1);
+            readDeltaTest(master,1,"~00P003STB");
 
  /*           BatchRead<String> batch = new BatchRead<String>();
 			batch.addLocator("10",	BaseLocator.holdingRegister(slaveId, 10, DataType.TWO_BYTE_INT_SIGNED));
@@ -56,6 +61,20 @@ public class QwertTest {
         }
     }
 
+    public static void readDeltaTest(QwertMaster master,int slaveId, String command) {
+        try {
+            ReadDeltaRequest request = new ReadDeltaRequest(slaveId, command);
+            ReadDeltaResponse response = (ReadDeltaResponse) master.send(request);
+
+            if (response.isException())
+                System.out.println("Exception response: message=" + response.getExceptionMessage());
+            else
+                System.out.println(response.getMessage());
+        }
+        catch (QudongTransportException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     public static void readDianzongTest(QwertMaster master,float ver, int slaveId, int cid1, int cid2,int lenid) {

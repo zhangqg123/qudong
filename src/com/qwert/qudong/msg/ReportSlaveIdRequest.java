@@ -62,12 +62,12 @@ public class ReportSlaveIdRequest extends QwertRequest {
     }
 
     @Override
-    QwertResponse getResponseInstance(int slaveId) throws QudongTransportException {
+    public QwertResponse getResponseInstance(int slaveId) throws QudongTransportException {
         return new ReportSlaveIdResponse(slaveId);
     }
 
     @Override
-    QwertResponse handleImpl(ProcessImage processImage) throws QudongTransportException {
+    public QwertResponse handleImpl(ProcessImage processImage) throws QudongTransportException {
         return new ReportSlaveIdResponse(slaveId, processImage.getReportSlaveIdData());
     }
 

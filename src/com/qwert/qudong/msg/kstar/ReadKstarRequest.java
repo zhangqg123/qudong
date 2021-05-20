@@ -18,11 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.qwert.qudong.msg;
+package com.qwert.qudong.msg.kstar;
 
 import com.qwert.qudong.ProcessImage;
 import com.qwert.qudong.code.FunctionCode;
 import com.qwert.qudong.exception.QudongTransportException;
+import com.qwert.qudong.msg.QwertResponse;
+import com.qwert.qudong.msg.ReadDianzongResponse;
 
 /**
  * <p>ReadDianzongRequest class.</p>
@@ -44,14 +46,15 @@ public class ReadKstarRequest extends ReadKstarNumericRequest {
         super(slaveId,cid1,cid2);
     }
 
-    ReadKstarRequest(int slaveId) throws QudongTransportException {
+    public ReadKstarRequest(int slaveId) throws QudongTransportException {
         super(slaveId);
     }
 
 
     @Override
-    QwertResponse handleImpl(ProcessImage processImage) throws QudongTransportException {
+    public QwertResponse handleImpl(ProcessImage processImage) throws QudongTransportException {
         return new ReadDianzongResponse(slaveId, getData(processImage));
+    //    return null;
     }
 
     /** {@inheritDoc} */
@@ -61,7 +64,7 @@ public class ReadKstarRequest extends ReadKstarNumericRequest {
     }
 
     @Override
-    QwertResponse getResponseInstance(int slaveId) throws QudongTransportException {
+    public QwertResponse getResponseInstance(int slaveId) throws QudongTransportException {
         return new ReadDianzongResponse(slaveId);
     }
 

@@ -52,7 +52,7 @@ public class ReadM7000Request extends ReadM7000NumericRequest {
 
 
     @Override
-    QwertResponse handleImpl(ProcessImage processImage) throws QudongTransportException {
+    public QwertResponse handleImpl(ProcessImage processImage) throws QudongTransportException {
         return new ReadDianzongResponse(slaveId, getData(processImage));
     }
 
@@ -63,7 +63,7 @@ public class ReadM7000Request extends ReadM7000NumericRequest {
     }
 
     @Override
-    QwertResponse getResponseInstance(int slaveId) throws QudongTransportException {
+    public QwertResponse getResponseInstance(int slaveId) throws QudongTransportException {
         return new ReadDianzongResponse(slaveId);
     }
 

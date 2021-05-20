@@ -18,11 +18,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.qwert.qudong.msg;
+package com.qwert.qudong.msg.delta;
 
 import com.qwert.qudong.ProcessImage;
 import com.qwert.qudong.code.FunctionCode;
 import com.qwert.qudong.exception.QudongTransportException;
+import com.qwert.qudong.msg.QwertResponse;
+import com.qwert.qudong.msg.ReadDianzongResponse;
+import com.qwert.qudong.msg.kstar.ReadKstarNumericRequest;
 
 /**
  * <p>ReadDianzongRequest class.</p>
@@ -30,30 +33,22 @@ import com.qwert.qudong.exception.QudongTransportException;
  * @author Matthew Lohbihler
  * @version 5.0.0
  */
-public class ReadDianzongRequest extends ReadDianzongNumericRequest {
-	private float ver;
+public class ReadDeltaRequest extends ReadDeltaNumericRequest {
     /**
      * <p>Constructor for ReadDianzongRequest.</p>
      *
      * @param slaveId a int.
      * @param startOffset a int.
      * @param numberOfRegisters a int.
-     * @throws com.qwert.qudong.exception.QudongTransportException if any.
+     * @throws QudongTransportException if any.
      */
-    public ReadDianzongRequest(float ver,int slaveId, int cid1, int cid2,int lenid)
+    public ReadDeltaRequest(int slaveId, String command)
             throws QudongTransportException {
-        super(ver,slaveId, cid1, cid2,lenid);
-        this.ver=ver;
+        super(slaveId,command);
     }
 
-    ReadDianzongRequest(int slaveId) throws QudongTransportException {
+    public ReadDeltaRequest(int slaveId) throws QudongTransportException {
         super(slaveId);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public byte getFunctionCode() {
-        return FunctionCode.READ_DIANZONG_REGISTERS;
     }
 
     @Override
@@ -66,17 +61,20 @@ public class ReadDianzongRequest extends ReadDianzongNumericRequest {
     protected short getNumeric(ProcessImage processImage, int index) throws QudongTransportException {
         return processImage.getHoldingRegister(index);
     }
-
     @Override
-    public QwertResponse getResponseInstance(int slaveId) throws QudongTransportException {
+    public QwertResponse getResponseInstance(int slaveId) throws QudongTransportException{
         return new ReadDianzongResponse(slaveId);
     }
+
 
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "ReadDianzongRequest [slaveId=" + slaveId + ", getFunctionCode()=" + getFunctionCode()
-                + ", toString()=" + super.toString() + "]";
+        return "ReadDeltaRequest [slaveId=" + slaveId + ", toString()=" + super.toString() + "]";
     }
 
+	@Override
+	public byte getFunctionCode() {
+        return FunctionCode.READ_DELTA_REGISTERS;
+	}
 }

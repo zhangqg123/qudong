@@ -28,6 +28,8 @@ import com.qwert.qudong.code.ExceptionCode;
 import com.qwert.qudong.code.FunctionCode;
 import com.qwert.qudong.exception.QudongTransportException;
 import com.qwert.qudong.exception.IllegalDataAddressException;
+import com.qwert.qudong.msg.delta.ReadDeltaRequest;
+import com.qwert.qudong.msg.kstar.ReadKstarRequest;
 import com.qwert.qudong.sero.util.queue.ByteQueue;
 
 /**
@@ -46,8 +48,10 @@ abstract public class QwertRequest extends QwertMessage {
      */
     public static QwertRequest createQwertRequest(ByteQueue queue) throws QudongTransportException {
         byte code = 0;
-        if(queue.size()>0){
+        int end=queue.size();
+        if(end>0){
             code = queue.peek(0);
+            end=queue.peek(end-1);
         }
     //    ByteQueue msgQueue = QwertAsciiUtils.getUnDianzongMessage(queue);
     //	int slaveId = msgQueue.peek(1);
@@ -55,7 +59,10 @@ abstract public class QwertRequest extends QwertMessage {
         int slaveId=1;
         byte  functionCode = FunctionCode.READ_DIANZONG_REGISTERS;
         if(code==QwertAsciiUtils.START){
-            functionCode = FunctionCode.READ_DIANZONG_REGISTERS;
+            if(end==13)
+                functionCode = FunctionCode.READ_DIANZONG_REGISTERS;
+            else
+                functionCode = FunctionCode.READ_DELTA_REGISTERS;
         }
         if(code==QwertAsciiUtils.M7000_START){
             functionCode = FunctionCode.READ_M7000_REGISTERS;
@@ -76,6 +83,11 @@ abstract public class QwertRequest extends QwertMessage {
             msgQueue = QwertAsciiUtils.getUnKstarAsciiMessage(queue);
             slaveId = 1;
             request = new ReadKstarRequest(slaveId);
+        }else if (functionCode == FunctionCode.READ_DELTA_REGISTERS) {
+            msgQueue = queue;
+            slaveId = 1;
+            request = new ReadDeltaRequest(slaveId);
+            return request;
         }else if (functionCode == FunctionCode.REPORT_SLAVE_ID)
             request = new ReportSlaveIdRequest(slaveId);
         // else if (functionCode == FunctionCode.WRITE_MASK_REGISTER)
@@ -88,7 +100,7 @@ abstract public class QwertRequest extends QwertMessage {
         return request;
     }
 
-    QwertRequest(int slaveId) throws QudongTransportException {
+    public QwertRequest(int slaveId) throws QudongTransportException {
         super(slaveId);
     }
 
@@ -121,7 +133,7 @@ abstract public class QwertRequest extends QwertMessage {
         }
     }
 
-    abstract QwertResponse handleImpl(ProcessImage processImage) throws QudongTransportException;
+    public abstract QwertResponse handleImpl(ProcessImage processImage) throws QudongTransportException;
 
     /**
      * <p>readRequest.</p>
@@ -136,7 +148,7 @@ abstract public class QwertRequest extends QwertMessage {
         return response;
     }
 
-    abstract QwertResponse getResponseInstance(int slaveId) throws QudongTransportException;
+    public abstract QwertResponse getResponseInstance(int slaveId) throws QudongTransportException;
 
     @Override
     final protected void writeImpl(ByteQueue queue) {

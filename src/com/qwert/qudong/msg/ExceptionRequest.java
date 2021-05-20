@@ -69,12 +69,12 @@ public class ExceptionRequest extends QwertRequest {
     }
 
     @Override
-    QwertResponse getResponseInstance(int slaveId) throws QudongTransportException {
+    public QwertResponse getResponseInstance(int slaveId) throws QudongTransportException {
         return new ExceptionResponse(slaveId, functionCode, exceptionCode);
     }
 
     @Override
-    QwertResponse handleImpl(ProcessImage processImage) throws QudongTransportException {
+    public QwertResponse handleImpl(ProcessImage processImage) throws QudongTransportException {
         return getResponseInstance(slaveId);
     }
 

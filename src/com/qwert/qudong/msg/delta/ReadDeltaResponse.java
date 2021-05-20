@@ -18,12 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.qwert.qudong.msg;
+package com.qwert.qudong.msg.delta;
 
-import com.qwert.qudong.base.QwertAsciiUtils;
 import com.qwert.qudong.base.QwertUtils;
 import com.qwert.qudong.code.FunctionCode;
 import com.qwert.qudong.exception.QudongTransportException;
+import com.qwert.qudong.msg.ReadResponse;
 import com.qwert.qudong.sero.util.queue.ByteQueue;
 
 /**
@@ -32,21 +32,26 @@ import com.qwert.qudong.sero.util.queue.ByteQueue;
  * @author Matthew Lohbihler
  * @version 5.0.0
  */
-public class ReadDianzongResponse extends ReadResponse {
+public class ReadDeltaResponse extends ReadResponse {
 	private byte[] data;
-    public ReadDianzongResponse(int slaveId, byte[] data) throws QudongTransportException {
+	private String msg;
+
+    ReadDeltaResponse(int slaveId, byte[] data) throws QudongTransportException {
         super(slaveId, data);
         this.data=data;
     }
 
-    public ReadDianzongResponse(int slaveId) throws QudongTransportException {
+    ReadDeltaResponse(int slaveId) throws QudongTransportException {
         super(slaveId);
     }
-
+    public ReadDeltaResponse(int slaveId, String msg) throws QudongTransportException {
+        super(slaveId);
+        this.msg=msg;
+    }
     /** {@inheritDoc} */
     @Override
     public byte getFunctionCode() {
-        return FunctionCode.READ_DIANZONG_REGISTERS;
+        return FunctionCode.READ_DELTA_REGISTERS;
     }
 
     /** {@inheritDoc} */
@@ -59,30 +64,15 @@ public class ReadDianzongResponse extends ReadResponse {
     }
 
 	
-	public byte[] getRetData() {
+	public String getMessage() {
 		// TODO Auto-generated method stub
-		return data;
+		return msg;
 	}
 
 	
     @Override
     final protected void writeImpl(ByteQueue queue) {
     	if(simulator==0) {
-	    	byte[] bur = new byte[2];
-			queue.pop(bur,0,2);
-	  		queue.push("02");
-			queue.push("01");
-			queue.push(bur);
-	  		queue.push("06");
-			queue.push("00");
-	    	queue.push("04");
-	   		queue.push("07");
-	        String lenid = chkLength(48);
-	        byte[] tmp = lenid.toUpperCase().getBytes();
-	   		queue.push(tmp);
-			byte[] rd = getRetData();
-			queue.push(rd);
-//			QwertAsciiUtils.getAsciiData(queue,2);
 		}else {
             writeResponse(queue);
 		}
@@ -101,14 +91,7 @@ public class ReadDianzongResponse extends ReadResponse {
     @Override
     protected void readResponse(ByteQueue queue) {
     	if(simulator==0) {
-	    	int tmpnumber = ((((queue.peek(4))<<8) & 0xff00) | ((queue.peek(5))&0x00ff))&0x0fff;
-	    	int numberOfBytes = tmpnumber/2;
-	  //      int numberOfBytes = QwertUtils.popUnsignedByte(queue);
-	        if (queue.size() < numberOfBytes)
-	            throw new ArrayIndexOutOfBoundsException();
-	
-	        data = new byte[numberOfBytes];
-	        queue.pop(6);
+	        data = new byte[6];
 	        queue.pop(data);
         }else {
             int numberOfBytes = QwertUtils.popUnsignedByte(queue);
@@ -123,5 +106,5 @@ public class ReadDianzongResponse extends ReadResponse {
     public short[] getShortData() {
       return convertToShorts(data);
   }
-	
+
 }

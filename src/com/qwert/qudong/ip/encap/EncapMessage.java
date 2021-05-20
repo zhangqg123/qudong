@@ -26,6 +26,10 @@ import com.qwert.qudong.ip.IpMessage;
 import com.qwert.qudong.msg.*;
 import com.qwert.qudong.msg.ReadM7000Request;
 import com.qwert.qudong.msg.ReadM7000Response;
+import com.qwert.qudong.msg.delta.ReadDeltaRequest;
+import com.qwert.qudong.msg.delta.ReadDeltaResponse;
+import com.qwert.qudong.msg.kstar.ReadKstarRequest;
+import com.qwert.qudong.msg.kstar.ReadKstarResponse;
 import com.qwert.qudong.sero.util.queue.ByteQueue;
 
 /**
@@ -75,8 +79,10 @@ public class EncapMessage extends IpMessage {
         if (qwertMessage instanceof ReadKstarRequest || qwertMessage instanceof ReadKstarResponse) {
             ret = QwertAsciiUtils.getKstarAsciiData(queue, r);
         }
+        if (qwertMessage instanceof ReadDeltaRequest || qwertMessage instanceof ReadDeltaResponse) {
+            ret = queue.popAll();
+        }
         return ret;
-//        return queue.popAll();
     }
     
 }

@@ -18,12 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.qwert.qudong.msg;
+package com.qwert.qudong.msg.kstar;
 
 import com.qwert.qudong.ProcessImage;
 import com.qwert.qudong.Qwert;
 import com.qwert.qudong.base.QwertUtils;
 import com.qwert.qudong.exception.QudongTransportException;
+import com.qwert.qudong.msg.QwertRequest;
 import com.qwert.qudong.sero.util.queue.ByteQueue;
 
 /**
@@ -56,7 +57,7 @@ abstract public class ReadKstarNumericRequest extends QwertRequest {
         QwertUtils.validateOffset(cid1);
     }
 
-    ReadKstarNumericRequest(int slaveId) throws QudongTransportException {
+    public ReadKstarNumericRequest(int slaveId) throws QudongTransportException {
         super(slaveId);
     }
 

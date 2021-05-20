@@ -27,6 +27,8 @@ import com.qwert.qudong.code.FunctionCode;
 import com.qwert.qudong.exception.QudongTransportException;
 import com.qwert.qudong.exception.IllegalFunctionException;
 import com.qwert.qudong.exception.SlaveIdNotEqual;
+import com.qwert.qudong.msg.delta.ReadDeltaResponse;
+import com.qwert.qudong.msg.kstar.ReadKstarResponse;
 import com.qwert.qudong.sero.util.queue.ByteQueue;
 
 /**
@@ -47,22 +49,31 @@ abstract public class QwertResponse extends QwertMessage {
      * @throws QudongTransportException if any.
      */
     public static QwertResponse createQwertResponse(ByteQueue queue) throws QudongTransportException {
-        byte b = 0;
+        byte code = 0;
         byte functionCode = FunctionCode.READ_DIANZONG_REGISTERS;
-        if(queue.size()>0) {
-        	b = queue.peek(0);
-    	}
+        int end=queue.size();
+        if(end>0){
+            code = queue.peek(0);
+            end=queue.peek(end-1);
+        }
+
         int slaveId=1;
         String msg=null;
-        if (b == QwertAsciiUtils.START) {
-            functionCode = FunctionCode.READ_DIANZONG_REGISTERS;
-            queue=QwertAsciiUtils.getUnDianzongMessage(queue);
-            slaveId = queue.peek(1);
-        }else if (b == QwertAsciiUtils.M7000_RETURN_START) {
+        if (code == QwertAsciiUtils.START) {
+            if(end==13){
+                functionCode = FunctionCode.READ_DIANZONG_REGISTERS;
+                queue=QwertAsciiUtils.getUnDianzongMessage(queue);
+                slaveId = queue.peek(1);
+            }else{
+                functionCode = FunctionCode.READ_DELTA_REGISTERS;
+                msg=QwertAsciiUtils.getDeltaReturnMessage(queue);
+                slaveId=1;
+            }
+        }else if (code == QwertAsciiUtils.M7000_RETURN_START) {
         	functionCode = FunctionCode.READ_M7000_REGISTERS;
         	queue=QwertAsciiUtils.getM7000ReturnMessage(queue);
             slaveId = 1;
-        }else if (b == QwertAsciiUtils.KSTAR_RETURN_START) {
+        }else if (code == QwertAsciiUtils.KSTAR_RETURN_START) {
             functionCode = FunctionCode.READ_KSTAR_REGISTERS;
             msg=QwertAsciiUtils.getKstarReturnMessage(queue);
             slaveId = 1;
@@ -91,6 +102,9 @@ abstract public class QwertResponse extends QwertMessage {
             response = new ReadM7000Response(slaveId);
         else if (functionCode == FunctionCode.READ_KSTAR_REGISTERS) {
             response = new ReadKstarResponse(slaveId, msg);
+            return response;
+        }else if (functionCode == FunctionCode.READ_DELTA_REGISTERS) {
+            response = new ReadDeltaResponse(slaveId, msg);
             return response;
         }else if (functionCode == FunctionCode.REPORT_SLAVE_ID)
             response = new ReportSlaveIdResponse(slaveId);

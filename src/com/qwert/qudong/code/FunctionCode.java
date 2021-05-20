@@ -54,6 +54,7 @@ public class FunctionCode {
     public static final byte READ_DIANZONG_REGISTERS = 101;
     public static final byte READ_M7000_REGISTERS = 102;
     public static final byte READ_KSTAR_REGISTERS = 103;
+    public static final byte READ_DELTA_REGISTERS = 104;
 
     /**
      * <p>toString.</p>

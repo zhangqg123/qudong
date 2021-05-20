@@ -169,6 +169,28 @@ abstract public class QwertAsciiUtils{
 
         return msg;
     }
+    public static String getDeltaReturnMessage(ByteQueue queue) throws QudongTransportException {
+        // Validate that the message starts with the required indicator
+        byte b = queue.pop();
+        if (b != START)
+            throw new QudongTransportException("Invalid message start: " + b);
+        byte[] bur = new byte[6];
+        queue.pop(bur,0,6);
+        ByteQueue burQueue = new ByteQueue(3);
+        burQueue.push(bur[3]);
+        burQueue.push(bur[4]);
+        burQueue.push(bur[5]);
+        String len = fromAsciiKstar(burQueue, burQueue.size());
+        int aa = Integer.parseInt(len);
+        byte[] msgQueue = new byte[aa];
+        queue.pop(msgQueue,0,aa);
+        queue.pop(queue.size());
+        queue.push(msgQueue);
+        // Convert to unascii
+        String msg=QwertAsciiUtils.fromAsciiKstar(queue, queue.size());
+
+        return msg;
+    }
 
     /**
      * <p>getAsciiData.</p>
@@ -229,16 +251,14 @@ abstract public class QwertAsciiUtils{
     public static byte[] getKstarAsciiData(ByteQueue queue,int r) {
         int unasciiLen = queue.size();
         if(r==1) {
-            // Convert the message to ascii
-//            toAscii2(queue, 1);
-//            queue.push('Q');
-//            queue.push('1');
         }
         queue.push(END);
-
         // Return the data.
         return queue.popAll();
-//        return null;
+    }
+    public static byte[] getDeltaAsciiData(ByteQueue queue,int r) {
+        queue.push(END);
+        return queue.popAll();
     }
 
     public static byte[] toBytes(String s) throws Exception {
@@ -322,6 +342,9 @@ abstract public class QwertAsciiUtils{
         }
         if(a1==32){
             return " ";
+        }
+        if(a1==59){
+            return ";";
         }
         byte a2 = lookupUnascii[a1];
         String a3 = "" + a2;

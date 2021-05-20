@@ -35,11 +35,11 @@ import com.qwert.qudong.sero.util.queue.ByteQueue;
 abstract public class ReadResponse extends QwertResponse {
     private byte[] data;
 
-    ReadResponse(int slaveId) throws QudongTransportException {
+    public ReadResponse(int slaveId) throws QudongTransportException {
         super(slaveId);
     }
 
-    ReadResponse(int slaveId, byte[] data) throws QudongTransportException {
+    public ReadResponse(int slaveId, byte[] data) throws QudongTransportException {
         super(slaveId);
         this.data = data;
     }
