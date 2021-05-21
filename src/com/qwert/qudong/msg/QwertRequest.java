@@ -84,10 +84,9 @@ abstract public class QwertRequest extends QwertMessage {
             slaveId = 1;
             request = new ReadKstarRequest(slaveId);
         }else if (functionCode == FunctionCode.READ_DELTA_REGISTERS) {
-            msgQueue = queue;
+            msgQueue = QwertAsciiUtils.getUnDeltaAsciiMessage(queue);
             slaveId = 1;
             request = new ReadDeltaRequest(slaveId);
-            return request;
         }else if (functionCode == FunctionCode.REPORT_SLAVE_ID)
             request = new ReportSlaveIdRequest(slaveId);
         // else if (functionCode == FunctionCode.WRITE_MASK_REGISTER)

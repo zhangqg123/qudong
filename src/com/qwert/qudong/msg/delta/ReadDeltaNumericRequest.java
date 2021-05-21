@@ -41,8 +41,6 @@ abstract public class ReadDeltaNumericRequest extends QwertRequest {
      * <p>Constructor for ReadDianzongNumericRequest.</p>
      *
      * @param slaveId a int.
-     * @param startOffset a int.
-     * @param numberOfRegisters a int.
      * @throws QudongTransportException if any.
      */
 
@@ -66,6 +64,17 @@ abstract public class ReadDeltaNumericRequest extends QwertRequest {
         queue.popAll();
 		byte[] aa = command.toUpperCase().getBytes();
         queue.push(aa);
+      //  "~00P003STB"
+ /*       queue.push('~');
+        queue.push('0');
+        queue.push('0');
+        queue.push('P');
+        queue.push('0');
+        queue.push('0');
+        queue.push('3');
+        queue.push('S');
+        queue.push('T');
+        queue.push('B');*/
     }
 
     /** {@inheritDoc} */

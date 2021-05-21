@@ -193,6 +193,7 @@ public class MessageControl implements DataConsumer {
         byte[] data = request.getMessageData2(1);
   //      byte[] data = request.getMessageData();
 	//	String putIn = "~210360470000fda9\r\n";
+//    		String putIn= "~00P003STB"; //台达
 	//	byte[] data = putIn.toUpperCase().getBytes();
     //		String putIn= "~200160420000fdb1\r"; //大金
   //  		String putIn= "$016\r"; //7000d
@@ -245,10 +246,10 @@ public class MessageControl implements DataConsumer {
      */
     public void send(OutgoingResponseMessage response) throws IOException {
 //		String putIn = "~21036000d03000d201f40014003200000000012c0096032000c800e60078f3f3\r\n";
-//        String putIn = "!000000\r";
-//        String putIn = "(208.4 140.0 208.4 034 59.9 2.05 35.0 00110000\r";
+//        String putIn = "!9E0000\r"; //M7000d
+//        String putIn = "(208.4 140.0 208.4 034 59.9 2.05 35.0 00110000\r"; //科士达
         String putIn = "~00D0250;0;1;;;000;2740;;029;100";//台达
-		byte[] data = putIn.toUpperCase().getBytes();
+		byte[] data=putIn.toUpperCase().getBytes();
         write(data);
 //        write(response.getMessageData2(2));
     }

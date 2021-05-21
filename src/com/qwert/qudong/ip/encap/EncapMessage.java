@@ -80,7 +80,8 @@ public class EncapMessage extends IpMessage {
             ret = QwertAsciiUtils.getKstarAsciiData(queue, r);
         }
         if (qwertMessage instanceof ReadDeltaRequest || qwertMessage instanceof ReadDeltaResponse) {
-            ret = queue.popAll();
+            ret = QwertAsciiUtils.getDeltaAsciiData(queue, r);
+//            ret = queue.popAll();
         }
         return ret;
     }

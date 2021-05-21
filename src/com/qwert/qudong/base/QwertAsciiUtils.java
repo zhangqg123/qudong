@@ -121,6 +121,29 @@ abstract public class QwertAsciiUtils{
 
         return msgQueue;
     }
+    public static ByteQueue getUnDeltaAsciiMessage(ByteQueue queue) throws QudongTransportException {
+        // Validate that the message starts with the required indicator
+        byte b = queue.pop();
+        if (b != START)
+            throw new QudongTransportException("Invalid message start: " + b);
+
+        // Find the end indicator
+//        int end = queue.indexOf(END);
+//        if (end == -1)
+//            throw new ArrayIndexOutOfBoundsException();
+
+        // Remove the message from the queue, leaving the LRC there
+        byte[] asciiBytes = new byte[queue.size()];
+        queue.pop(asciiBytes);
+        ByteQueue msgQueue = new ByteQueue(asciiBytes);
+
+        // Pop the end indicator off of the queue
+//        queue.pop(END.length);
+        // Convert to unascii
+//        QwertAsciiUtils.fromAsciiDelta(msgQueue, msgQueue.size());
+
+        return msgQueue;
+    }
 
     public static ByteQueue getM7000ReturnMessage(ByteQueue queue) throws QudongTransportException {
         // Validate that the message starts with the required indicator
@@ -256,8 +279,9 @@ abstract public class QwertAsciiUtils{
         // Return the data.
         return queue.popAll();
     }
+
     public static byte[] getDeltaAsciiData(ByteQueue queue,int r) {
-        queue.push(END);
+//        queue.push(END);
         return queue.popAll();
     }
 
@@ -316,6 +340,11 @@ abstract public class QwertAsciiUtils{
             queue.push(readAscii(queue));
     }
     public static void fromAsciiM7000(ByteQueue queue, int asciiLen) {
+        int len = asciiLen ;
+        for (int i = 0; i < len; i++)
+            queue.push(readAsciiM7000(queue));
+    }
+    public static void fromAsciiDelta(ByteQueue queue, int asciiLen) {
         int len = asciiLen ;
         for (int i = 0; i < len; i++)
             queue.push(readAsciiM7000(queue));

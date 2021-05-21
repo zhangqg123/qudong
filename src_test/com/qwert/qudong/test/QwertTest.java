@@ -43,9 +43,9 @@ public class QwertTest {
             int cid1 = 60;
             int cid2 = 42;
             int lenid = 0;
- //           readDianzongTest(master, ver,slaveId, cid1,cid2,lenid);
+//            readDianzongTest(master, ver,slaveId, cid1,cid2,lenid);
 //           read7000Test(master,1,6);
-//            readkstarTest(master,1,51,1);
+//              readkstarTest(master,1,51,1);//"~00P003STB"
             readDeltaTest(master,1,"~00P003STB");
 
  /*           BatchRead<String> batch = new BatchRead<String>();
