@@ -39,6 +39,7 @@ abstract public class BaseMessageParser implements MessageParser {
      * @param master a boolean.
      */
     public BaseMessageParser(boolean master) {
+
         this.master = master;
     }
 
@@ -57,7 +58,8 @@ abstract public class BaseMessageParser implements MessageParser {
     /**
      * <p>parseMessageImpl.</p>
      *
-     * @param queue a {@link com.qwert.qudong.sero.util.queue.ByteQueue} object.
+     * @param queue a {@link ByteQueue} object.
+     * @param protocal
      * @return a {@link com.qwert.qudong.sero.messaging.IncomingMessage} object.
      * @throws java.lang.Exception if any.
      */

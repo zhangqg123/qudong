@@ -33,11 +33,7 @@ import com.qwert.qudong.sero.util.queue.ByteQueue;
  * @version 5.0.0
  */
 public class ReadM7000Response extends ReadResponse {
-	private byte[] data;
-    ReadM7000Response(int slaveId, byte[] data) throws QudongTransportException {
-        super(slaveId, data);
-        this.data=data;
-    }
+//	private byte[] data;
 
     ReadM7000Response(int slaveId) throws QudongTransportException {
         super(slaveId);
@@ -59,35 +55,6 @@ public class ReadM7000Response extends ReadResponse {
     }
 
 	
-	public byte[] getRetData() {
-		// TODO Auto-generated method stub
-		return data;
-	}
-
-	
-    @Override
-    final protected void writeImpl(ByteQueue queue) {
-    	if(simulator==0) {
-	    	byte[] bur = new byte[2];
-			queue.pop(bur,0,2);
-	  		queue.push("02");
-			queue.push("00");
-			queue.push(bur);
-	  		queue.push("06");
-			queue.push("00");
-	    	queue.push("04");
-	   		queue.push("02");
-	        String lenid = chkLength(48);
-	        byte[] tmp = lenid.toUpperCase().getBytes();
-	   		queue.push(tmp);
-			byte[] rd = getRetData();
-			queue.push(rd);
-//			QwertAsciiUtils.getAsciiData(queue,2);
-		}else {
-            writeResponse(queue);
-		}
-    }
-	
 	public static String chkLength(int value){
 		byte a1 = (byte) (value & 0xf);
 		byte a2 = (byte) ((value>>4) & 0xf);
@@ -98,23 +65,14 @@ public class ReadM7000Response extends ReadResponse {
 	}
 
     /** {@inheritDoc} */
-    @Override
-    protected void readResponse(ByteQueue queue) {
-    	if(simulator==0) {
-	        data = new byte[6];
-	        queue.pop(data);
-        }else {
-            int numberOfBytes = QwertUtils.popUnsignedByte(queue);
-            if (queue.size() < numberOfBytes)
-                throw new ArrayIndexOutOfBoundsException();
-
-            data = new byte[numberOfBytes];
-            queue.pop(data);
-        }
-    }
+//    @Override
+//    protected void readResponse(ByteQueue queue) {
+//        data = new byte[queue.size()];
+//        queue.pop(data);
+//    }
     
-    public short[] getShortData() {
-      return convertToShorts(data);
-  }
-	
+//    public short[] getShortData() {
+//      return convertToShorts(data);
+//  }
+
 }

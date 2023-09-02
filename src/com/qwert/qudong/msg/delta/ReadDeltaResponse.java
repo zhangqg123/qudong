@@ -33,20 +33,10 @@ import com.qwert.qudong.sero.util.queue.ByteQueue;
  * @version 5.0.0
  */
 public class ReadDeltaResponse extends ReadResponse {
-	private byte[] data;
-	private String msg;
 
-    ReadDeltaResponse(int slaveId, byte[] data) throws QudongTransportException {
-        super(slaveId, data);
-        this.data=data;
-    }
 
-    ReadDeltaResponse(int slaveId) throws QudongTransportException {
+    public ReadDeltaResponse(int slaveId) throws QudongTransportException {
         super(slaveId);
-    }
-    public ReadDeltaResponse(int slaveId, String msg) throws QudongTransportException {
-        super(slaveId);
-        this.msg=msg;
     }
     /** {@inheritDoc} */
     @Override
@@ -63,13 +53,6 @@ public class ReadDeltaResponse extends ReadResponse {
                 + ", toString()=" + super.toString(true) + "]";
     }
 
-	
-	public String getMessage() {
-		// TODO Auto-generated method stub
-		return msg;
-	}
-
-	
     @Override
     final protected void writeImpl(ByteQueue queue) {
     	if(simulator==0) {
@@ -86,25 +69,5 @@ public class ReadDeltaResponse extends ReadResponse {
 		sum=((~sum%0x10000+1)& 0xf)<<12 | (value&0xffff);
 		return Integer.toHexString(sum);
 	}
-
-    /** {@inheritDoc} */
-    @Override
-    protected void readResponse(ByteQueue queue) {
-    	if(simulator==0) {
-	        data = new byte[6];
-	        queue.pop(data);
-        }else {
-            int numberOfBytes = QwertUtils.popUnsignedByte(queue);
-            if (queue.size() < numberOfBytes)
-                throw new ArrayIndexOutOfBoundsException();
-
-            data = new byte[numberOfBytes];
-            queue.pop(data);
-        }
-    }
-    
-    public short[] getShortData() {
-      return convertToShorts(data);
-  }
 
 }

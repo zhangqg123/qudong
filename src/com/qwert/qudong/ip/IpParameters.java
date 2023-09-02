@@ -32,6 +32,15 @@ public class IpParameters {
     private String host;
     private int port = QwertUtils.TCP_PORT;
     private boolean encapsulated;
+    private byte protocal;
+
+    public byte getProtocal() {
+        return protocal;
+    }
+
+    public void setProtocal(byte protocal) {
+        this.protocal = protocal;
+    }
 
     /**
      * <p>Getter for the field <code>host</code>.</p>

@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import com.qwert.qudong.QwertFactory;
 import com.qwert.qudong.QwertMaster;
+import com.qwert.qudong.code.ProtocalCode;
 import com.qwert.qudong.exception.QudongTransportException;
 import com.qwert.qudong.ip.IpParameters;
 import com.qwert.qudong.msg.*;
@@ -13,6 +14,7 @@ import com.qwert.qudong.msg.delta.ReadDeltaRequest;
 import com.qwert.qudong.msg.delta.ReadDeltaResponse;
 import com.qwert.qudong.msg.kstar.ReadKstarRequest;
 import com.qwert.qudong.msg.kstar.ReadKstarResponse;
+import com.qwert.qudong.msg.protocal.ReadProtocalResponse;
 import com.qwert.qudong.serial.QwertSerialPortWrapper;
 
 public class QwertTest {
@@ -30,6 +32,9 @@ public class QwertTest {
         ipParameters.setHost("127.0.0.1");
         ipParameters.setPort(502);
         ipParameters.setEncapsulated(true);
+//        ipParameters.setProtocal(ProtocalCode.DELTA);
+//        ipParameters.setProtocal(ProtocalCode.DELTA);
+
    	
     	QwertSerialPortWrapper wrapper = new QwertSerialPortWrapper(commPortId, baudRate, flowControlIn, flowControlOut, dataBits, stopBits, parity);
         QwertFactory QwertFactory = new QwertFactory();
@@ -44,9 +49,9 @@ public class QwertTest {
             int cid2 = 42;
             int lenid = 0;
 //            readDianzongTest(master, ver,slaveId, cid1,cid2,lenid);
-//           read7000Test(master,1,6);
+           read7000Test(master,1,6);
 //              readkstarTest(master,1,51,1);//"~00P003STB"
-            readDeltaTest(master,1,"~00P003STB");
+//            readDeltaTest(master,1,"~00P003STB");
 
  /*           BatchRead<String> batch = new BatchRead<String>();
 			batch.addLocator("10",	BaseLocator.holdingRegister(slaveId, 10, DataType.TWO_BYTE_INT_SIGNED));
@@ -64,12 +69,16 @@ public class QwertTest {
     public static void readDeltaTest(QwertMaster master,int slaveId, String command) {
         try {
             ReadDeltaRequest request = new ReadDeltaRequest(slaveId, command);
-            ReadDeltaResponse response = (ReadDeltaResponse) master.send(request);
+//            ReadDeltaResponse response = (ReadDeltaResponse) master.send(request);
+            ReadResponse response = (ReadResponse) master.send(request);
 
             if (response.isException())
                 System.out.println("Exception response: message=" + response.getExceptionMessage());
-            else
-                System.out.println(response.getMessage());
+            else{
+                byte[] tmpData = response.getData();
+                String strDelta = new String(tmpData);
+                System.out.println("delta data:"+strDelta);
+            }
         }
         catch (QudongTransportException e) {
             e.printStackTrace();
@@ -85,22 +94,25 @@ public class QwertTest {
             if (response.isException())
                 System.out.println("Exception response: message=" + response.getExceptionMessage());
             else
-                System.out.println(Arrays.toString(response.getShortData()));
+                System.out.println(""+Arrays.toString(response.getShortData()));
         }
         catch (QudongTransportException e) {
             e.printStackTrace();
         }
     }
 
-    public static void read7000Test(QwertMaster master,int slaveId, int cid1) {
+    public static void read7000Test(QwertMaster master,int slaveId, int channel) {
         try {
-            ReadM7000Request request = new ReadM7000Request(slaveId, cid1);
-            ReadM7000Response response = (ReadM7000Response) master.send(request);
+            ReadM7000Request request = new ReadM7000Request(slaveId, channel);
+            ReadResponse response = (ReadResponse) master.send(request);
 
             if (response.isException())
                 System.out.println("Exception response: message=" + response.getExceptionMessage());
-            else
-                System.out.println(Arrays.toString(response.getShortData()));
+            else{
+                byte[] tmpData = response.getData();
+                String strDelta = new String(tmpData);
+                System.out.println("M7000 data:"+strDelta);
+            }
         }
         catch (QudongTransportException e) {
             e.printStackTrace();

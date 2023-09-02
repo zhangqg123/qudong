@@ -24,6 +24,7 @@ import com.qwert.qudong.base.QwertAsciiUtils;
 import com.qwert.qudong.base.QwertUtils;
 import com.qwert.qudong.exception.QudongTransportException;
 import com.qwert.qudong.ip.IpMessageResponse;
+import com.qwert.qudong.msg.QwertMessage;
 import com.qwert.qudong.msg.QwertResponse;
 import com.qwert.qudong.sero.util.queue.ByteQueue;
 
@@ -35,12 +36,14 @@ import com.qwert.qudong.sero.util.queue.ByteQueue;
  */
 public class EncapMessageResponse extends EncapMessage implements IpMessageResponse {
     static EncapMessageResponse createEncapMessageResponse(ByteQueue queue) throws QudongTransportException {
-    	// Create the modbus response.
+    	if(queue.size()==0)
+    	    return null;
+        // Create the modbus response.
 //        ByteQueue msgQueue = QwertAsciiUtils.getUnDianzongMessage(queue);
         QwertResponse response = QwertResponse.createQwertResponse(queue);
+
 //        QwertResponse response = QwertResponse.createQwertResponse(queue);
         EncapMessageResponse encapResponse = new EncapMessageResponse(response);
-
         // Check the CRC
  //       QwertUtils.checkCRC(encapResponse.qwertMessage, queue);
 
@@ -50,18 +53,18 @@ public class EncapMessageResponse extends EncapMessage implements IpMessageRespo
     /**
      * <p>Constructor for EncapMessageResponse.</p>
      *
-     * @param modbusResponse a {@link com.qwert.qudong.msg.QwertResponse} object.
+     * @param qwertResponse a {@link com.qwert.qudong.msg.QwertResponse} object.
      */
-    public EncapMessageResponse(QwertResponse modbusResponse) {
-        super(modbusResponse);
+    public EncapMessageResponse(QwertResponse qwertResponse) {
+        super(qwertResponse);
     }
 
     /**
-     * <p>getModbusResponse.</p>
+     * <p>getQwertResponse.</p>
      *
      * @return a {@link com.qwert.qudong.msg.QwertResponse} object.
      */
-    public QwertResponse getModbusResponse() {
+    public QwertResponse getQwertResponse() {
         return (QwertResponse) qwertMessage;
     }
 

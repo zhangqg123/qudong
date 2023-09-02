@@ -52,6 +52,17 @@ abstract public class ReadResponse extends QwertResponse {
         queue.push(data);
     }
 
+    @Override
+    protected void readResponse(ByteQueue queue) {
+//        int numberOfBytes = ModbusUtils.popUnsignedByte(queue);
+//        if (queue.size() < numberOfBytes)
+//            throw new ArrayIndexOutOfBoundsException();
+//        byte b = queue.pop();
+
+        data = new byte[queue.size()];
+        queue.pop(data);
+    }
+
     /**
      * <p>Getter for the field <code>data</code>.</p>
      *
@@ -66,9 +77,9 @@ abstract public class ReadResponse extends QwertResponse {
      *
      * @return an array of {@link short} objects.
      */
-//    public short[] getShortData() {
-//        return convertToShorts(data);
-//    }
+    public short[] getShortData() {
+        return convertToShorts(data);
+    }
 
     /**
      * <p>getBooleanData.</p>

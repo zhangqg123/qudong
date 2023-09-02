@@ -39,7 +39,6 @@ import com.qwert.qudong.ip.encap.EncapMessageRequest;
 import com.qwert.qudong.ip.encap.EncapWaitingRoomKeyFactory;
 import com.qwert.qudong.msg.QwertRequest;
 import com.qwert.qudong.msg.QwertResponse;
-import com.qwert.qudong.serial.dianzong.DianzongMessageRequest;
 import com.qwert.qudong.sero.messaging.EpollStreamTransport;
 import com.qwert.qudong.sero.messaging.MessageControl;
 import com.qwert.qudong.sero.messaging.OutgoingRequestMessage;
@@ -201,7 +200,7 @@ public class TcpMaster extends QwertMaster {
                 }
                 LOG.debug("Response: " + sb.toString());
             }
-            return ipResponse.getModbusResponse();
+            return ipResponse.getQwertResponse();
         }
         catch (Exception e) {
             LOG.debug("Exception: " + e.getMessage() + " " + e.getLocalizedMessage());
@@ -221,7 +220,7 @@ public class TcpMaster extends QwertMaster {
                         }
                         LOG.debug("Response: " + sb.toString());
                     }
-                    return ipResponse.getModbusResponse();
+                    return ipResponse.getQwertResponse();
                 }
                 catch (Exception e2) {
                     closeConnection();
@@ -285,6 +284,7 @@ public class TcpMaster extends QwertMaster {
         BaseMessageParser ipMessageParser = null;
         WaitingRoomKeyFactory waitingRoomKeyFactory=null;
         if (ipParameters.isEncapsulated()) {
+            byte protocal = ipParameters.getProtocal();
             ipMessageParser = new EncapMessageParser(true);
             waitingRoomKeyFactory = new EncapWaitingRoomKeyFactory();
         }

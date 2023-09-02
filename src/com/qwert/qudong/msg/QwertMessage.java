@@ -86,10 +86,6 @@ abstract public class QwertMessage {
     }
    
     final public void write(ByteQueue queue) {
-    	String[] tmp = ("2.0").split("\\.");
-    	queue.push(tmp[0]+tmp[1]);
-    	queue.push("0"+slaveId);
-//        QwertUtils.pushByte(queue, tmpver);
 //        QwertUtils.pushByte(queue, slaveId);
         writeImpl(queue);
     }

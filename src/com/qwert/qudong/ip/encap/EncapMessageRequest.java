@@ -70,7 +70,7 @@ public class EncapMessageRequest extends EncapMessage implements OutgoingRequest
      *
      * @return a {@link QwertRequest} object.
      */
-    public QwertRequest getModbusRequest() {
+    public QwertRequest getQwertRequest() {
         return (QwertRequest) qwertMessage;
     }
 

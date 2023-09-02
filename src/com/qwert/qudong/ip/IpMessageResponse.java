@@ -36,5 +36,5 @@ public interface IpMessageResponse extends OutgoingResponseMessage, IncomingResp
      *
      * @return a {@link com.qwert.qudong.msg.QwertResponse} object.
      */
-    QwertResponse getModbusResponse();
+    QwertResponse getQwertResponse();
 }

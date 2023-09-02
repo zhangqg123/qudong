@@ -31,19 +31,15 @@ import com.qwert.qudong.exception.QudongTransportException;
  * @version 5.0.0
  */
 public class ReadM7000Request extends ReadM7000NumericRequest {
-	private int cid1;
     /**
      * <p>Constructor for ReadDianzongRequest.</p>
      *
      * @param slaveId a int.
-     * @param startOffset a int.
-     * @param numberOfRegisters a int.
      * @throws com.qwert.qudong.exception.QudongTransportException if any.
      */
-    public ReadM7000Request(int slaveId, int cid1)
+    public ReadM7000Request(int slaveId, int channel)
             throws QudongTransportException {
-        super(slaveId);
-        this.cid1=cid1;
+        super(slaveId,channel);
     }
 
     ReadM7000Request(int slaveId) throws QudongTransportException {

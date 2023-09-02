@@ -22,10 +22,13 @@ package com.qwert.qudong.msg;
 
 import com.qwert.qudong.ProcessImage;
 import com.qwert.qudong.Qwert;
+import com.qwert.qudong.base.QwertAsciiUtils;
 import com.qwert.qudong.base.QwertUtils;
 import com.qwert.qudong.exception.QudongTransportException;
 import com.qwert.qudong.msg.QwertRequest;
 import com.qwert.qudong.sero.util.queue.ByteQueue;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * <p>Abstract ReadDianzongNumericRequest class.</p>
@@ -34,27 +37,24 @@ import com.qwert.qudong.sero.util.queue.ByteQueue;
  * @version 5.0.0
  */
 abstract public class ReadM7000NumericRequest extends QwertRequest {
-	private int cid1;
-	private int cid2;
+	private int channel;
 
     /**
      * <p>Constructor for ReadDianzongNumericRequest.</p>
      *
      * @param slaveId a int.
-     * @param startOffset a int.
-     * @param numberOfRegisters a int.
      * @throws com.qwert.qudong.exception.QudongTransportException if any.
      */
-    public ReadM7000NumericRequest(int slaveId, int cid1, int cid2) throws QudongTransportException {
+    public ReadM7000NumericRequest(int slaveId, int channel) throws QudongTransportException {
         super(slaveId);
-        this.cid1 = cid1;
-        this.cid2 = cid2;
+        this.channel = channel;
     }
+
 
     /** {@inheritDoc} */
     @Override
     public void validate(Qwert modbus) throws QudongTransportException {
-        QwertUtils.validateOffset(cid1);
+        QwertUtils.validateOffset(slaveId);
     }
 
     ReadM7000NumericRequest(int slaveId) throws QudongTransportException {
@@ -63,7 +63,17 @@ abstract public class ReadM7000NumericRequest extends QwertRequest {
 
     @Override
     protected void writeRequest(ByteQueue queue) {
-        queue.push("06");
+        queue.push(QwertAsciiUtils.M7000_START);
+        String hexString = String.format("%02X", slaveId);
+        hexString+=channel;
+        byte[] hexByte = new byte[3];
+        try {
+            hexByte = hexString.getBytes("ASCII");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        queue.push(hexByte);
+        queue.push(QwertAsciiUtils.END);
     }
 
     /** {@inheritDoc} */
@@ -71,7 +81,7 @@ abstract public class ReadM7000NumericRequest extends QwertRequest {
     protected void readRequest(ByteQueue queue) {
     	queue.pop();
     	queue.pop();
-        cid1 = queue.popInt(queue.pop());
+        channel = queue.popInt(queue.pop());
     }
 
     /**
@@ -104,6 +114,6 @@ abstract public class ReadM7000NumericRequest extends QwertRequest {
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "ReadKstarNumericRequest [cid1=" + cid1  +  "cid2=" + cid2  +"]";
+        return "ReadKstarNumericRequest [cid1=" + channel  +"]";
     }
 }

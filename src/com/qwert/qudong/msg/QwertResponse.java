@@ -23,13 +23,14 @@ package com.qwert.qudong.msg;
 
 import com.qwert.qudong.base.QwertAsciiUtils;
 import com.qwert.qudong.code.ExceptionCode;
-import com.qwert.qudong.code.FunctionCode;
+import com.qwert.qudong.code.ProtocalCode;
 import com.qwert.qudong.exception.QudongTransportException;
-import com.qwert.qudong.exception.IllegalFunctionException;
 import com.qwert.qudong.exception.SlaveIdNotEqual;
 import com.qwert.qudong.msg.delta.ReadDeltaResponse;
-import com.qwert.qudong.msg.kstar.ReadKstarResponse;
+import com.qwert.qudong.msg.protocal.ReadProtocalResponse;
 import com.qwert.qudong.sero.util.queue.ByteQueue;
+
+import java.lang.invoke.SwitchPoint;
 
 /**
  * <p>Abstract QwertResponse class.</p>
@@ -40,7 +41,6 @@ import com.qwert.qudong.sero.util.queue.ByteQueue;
 abstract public class QwertResponse extends QwertMessage {
     /** Constant <code>MAX_FUNCTION_CODE=(byte) 0x80</code> */
     protected static final byte MAX_FUNCTION_CODE = (byte) 0x80;
-
     /**
      * <p>createQwertResponse.</p>
      *
@@ -49,70 +49,40 @@ abstract public class QwertResponse extends QwertMessage {
      * @throws QudongTransportException if any.
      */
     public static QwertResponse createQwertResponse(ByteQueue queue) throws QudongTransportException {
-        byte code = 0;
-        byte functionCode = FunctionCode.READ_DIANZONG_REGISTERS;
-        int end=queue.size();
-        if(end>0){
-            code = queue.peek(0);
-            end=queue.peek(end-1);
-        }
+//        QwertResponse response = null;
 
-        int slaveId=1;
-        String msg=null;
-        if (code == QwertAsciiUtils.START) {
-            if(end==13){
-                functionCode = FunctionCode.READ_DIANZONG_REGISTERS;
-                queue=QwertAsciiUtils.getUnDianzongMessage(queue);
-                slaveId = queue.peek(1);
-            }else{
-                functionCode = FunctionCode.READ_DELTA_REGISTERS;
-                msg=QwertAsciiUtils.getDeltaReturnMessage(queue);
-                slaveId=1;
+/*
+        byte b = queue.pop();
+        if(protocal== ProtocalCode.DELTA){
+            if (b != QwertAsciiUtils.START)
+                throw new QudongTransportException("Invalid message start: " + b);
+            response = new ReadDeltaResponse(1);
+            response.read(queue, false);
+        }
+        if(protocal== ProtocalCode.M7000D){
+            if (b != QwertAsciiUtils.M7000_RETURN_START)
+                throw new QudongTransportException("Invalid message start: " + b);
+            // Find the end indicator
+            int end = queue.indexOf(QwertAsciiUtils.END);
+            if (end == -1)
+                throw new ArrayIndexOutOfBoundsException();
+
+            // Remove the message from the queue, leaving the LRC there
+            byte[] asciiBytes = new byte[end];
+            queue.pop(asciiBytes);
+            queue.pop(QwertAsciiUtils.END.length);
+            ByteQueue msgQueue = new ByteQueue(asciiBytes);
+            response = new ReadM7000Response(1);
+            response.read(msgQueue, false);
+            // Pop the end indicator off of the queue
+        } */
+        ReadResponse response=new ReadResponse(1) {
+            @Override
+            public byte getFunctionCode() {
+                return 0;
             }
-        }else if (code == QwertAsciiUtils.M7000_RETURN_START) {
-        	functionCode = FunctionCode.READ_M7000_REGISTERS;
-        	queue=QwertAsciiUtils.getM7000ReturnMessage(queue);
-            slaveId = 1;
-        }else if (code == QwertAsciiUtils.KSTAR_RETURN_START) {
-            functionCode = FunctionCode.READ_KSTAR_REGISTERS;
-            msg=QwertAsciiUtils.getKstarReturnMessage(queue);
-            slaveId = 1;
-        }else{
-            functionCode = FunctionCode.READ_DIANZONG_REGISTERS;
-            queue=QwertAsciiUtils.getUnDianzongMessage(new ByteQueue());
-            slaveId = queue.peek(1);
-        }
-
-//    	queue=QwertAsciiUtils.getUnDianzongMessage(queue);
-//    	int slaveId = queue.peek(1);
-//        int slaveId=1;
-        boolean isException = false;
-
-        if (greaterThan(functionCode, MAX_FUNCTION_CODE)) {
-            isException = true;
-            functionCode -= MAX_FUNCTION_CODE;
-        }
-
-        QwertResponse response = null;
-        if (functionCode == FunctionCode.READ_DIANZONG_REGISTERS) {
-//            queue = QwertAsciiUtils.getUnDianzongMessage(queue);
-//            slaveId = queue.peek(1);
-            response = new ReadDianzongResponse(slaveId);
-        }else if (functionCode == FunctionCode.READ_M7000_REGISTERS)
-            response = new ReadM7000Response(slaveId);
-        else if (functionCode == FunctionCode.READ_KSTAR_REGISTERS) {
-            response = new ReadKstarResponse(slaveId, msg);
-            return response;
-        }else if (functionCode == FunctionCode.READ_DELTA_REGISTERS) {
-            response = new ReadDeltaResponse(slaveId, msg);
-            return response;
-        }else if (functionCode == FunctionCode.REPORT_SLAVE_ID)
-            response = new ReportSlaveIdResponse(slaveId);
-        else
-            throw new IllegalFunctionException(functionCode, slaveId);
-
-        response.read(queue, isException);
-
+        };
+        response.read(queue, false);
         return response;
     }
 
@@ -156,6 +126,7 @@ abstract public class QwertResponse extends QwertMessage {
     /** {@inheritDoc} */
     @Override
     protected void writeImpl(ByteQueue queue) {
+
         if (isException()) {
             queue.push((byte) (getFunctionCode() + MAX_FUNCTION_CODE));
             queue.push(exceptionCode);
@@ -173,7 +144,7 @@ abstract public class QwertResponse extends QwertMessage {
      */
     abstract protected void writeResponse(ByteQueue queue);
 
-    void read(ByteQueue queue, boolean isException) {
+    protected void read(ByteQueue queue, boolean isException) {
         if (isException)
             exceptionCode = queue.pop();
         else

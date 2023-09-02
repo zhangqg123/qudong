@@ -223,7 +223,7 @@ public class TcpListener extends QwertMaster {
                 sb.append(String.format("%02X ", b));
             }
             LOG.debug("Response: " + sb.toString());
-            return ipResponse.getModbusResponse();
+            return ipResponse.getQwertResponse();
         }
         catch (Exception e) {
             LOG.debug(e.getLocalizedMessage() + ",  Port: " + ipParameters.getPort() + ", retries: " + retries);

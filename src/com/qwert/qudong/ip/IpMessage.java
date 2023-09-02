@@ -45,7 +45,7 @@ abstract public class IpMessage {
      *
      * @return a {@link com.qwert.qudong.msg.QwertMessage} object.
      */
-    public QwertMessage getModbusMessage() {
+    public QwertMessage getQwertMessage() {
         return qwertMessage;
     }
 }

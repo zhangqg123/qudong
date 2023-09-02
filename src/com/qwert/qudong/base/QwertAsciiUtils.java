@@ -39,7 +39,7 @@ abstract public class QwertAsciiUtils{
     public static final byte KSTAR_START = 'Q';
     public static final byte KSTAR_RETURN_START = '(';
     public static final byte M7000_RETURN_START = '!';
-    private static final byte[] END = { '\r' };
+    public static final byte[] END = { '\r' };
 
     public static ByteQueue getUnDianzongMessage(ByteQueue queue) throws QudongTransportException {
         // Validate that the message starts with the required indicator
@@ -198,7 +198,9 @@ abstract public class QwertAsciiUtils{
         if (b != START)
             throw new QudongTransportException("Invalid message start: " + b);
         byte[] bur = new byte[6];
-        queue.pop(bur,0,6);
+        byte[] tmp = queue.popAll();
+        String msg = new String(tmp);
+    /*    queue.pop(bur,0,6);
         ByteQueue burQueue = new ByteQueue(3);
         burQueue.push(bur[3]);
         burQueue.push(bur[4]);
@@ -208,9 +210,9 @@ abstract public class QwertAsciiUtils{
         byte[] msgQueue = new byte[aa];
         queue.pop(msgQueue,0,aa);
         queue.pop(queue.size());
-        queue.push(msgQueue);
+        queue.push(msgQueue); */
         // Convert to unascii
-        String msg=QwertAsciiUtils.fromAsciiKstar(queue, queue.size());
+//        String msg=QwertAsciiUtils.fromAsciiKstar(queue, queue.size());
 
         return msg;
     }

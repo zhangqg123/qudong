@@ -46,7 +46,7 @@ public class EncapRequestHandler extends BaseRequestHandler {
     /** {@inheritDoc} */
     public OutgoingResponseMessage handleRequest(IncomingRequestMessage req) throws Exception {
         EncapMessageRequest tcpRequest = (EncapMessageRequest) req;
-        QwertRequest request = tcpRequest.getModbusRequest();
+        QwertRequest request = tcpRequest.getQwertRequest();
         QwertResponse response = handleRequestImpl(request);
         if (response == null)
             return null;

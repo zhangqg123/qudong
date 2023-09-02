@@ -13,17 +13,17 @@ import com.qwert.qudong.sero.messaging.WaitingRoomKeyFactory;
  * @author Matthew Lohbihler
  * @version 5.0.0
  */
-public class EncapWaitingRoomKeyFactory implements WaitingRoomKeyFactory {
+public class EncapWaitingRoomKeyFactory2 implements WaitingRoomKeyFactory {
     /** {@inheritDoc} */
     @Override
     public WaitingRoomKey createWaitingRoomKey(OutgoingRequestMessage request) {
-        return createWaitingRoomKey(((IpMessage) request).getModbusMessage());
+        return createWaitingRoomKey(((IpMessage) request).getQwertMessage());
     }
 
     /** {@inheritDoc} */
     @Override
     public WaitingRoomKey createWaitingRoomKey(IncomingResponseMessage response) {
-        return createWaitingRoomKey(((IpMessage) response).getModbusMessage());
+        return createWaitingRoomKey(((IpMessage) response).getQwertMessage());
     }
 
     /**

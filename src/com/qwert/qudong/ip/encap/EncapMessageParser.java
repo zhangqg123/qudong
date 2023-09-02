@@ -35,6 +35,7 @@ public class EncapMessageParser extends BaseMessageParser {
      * <p>Constructor for EncapMessageParser.</p>
      *
      * @param master a boolean.
+     * @param protocal
      */
     public EncapMessageParser(boolean master) {
         super(master);

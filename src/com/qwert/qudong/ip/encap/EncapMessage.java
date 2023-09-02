@@ -60,7 +60,7 @@ public class EncapMessage extends IpMessage {
         qwertMessage.write(msgQueue);
 
         // Write the CRC
-        QwertUtils.pushShort(msgQueue, QwertUtils.calculateCRC(qwertMessage));
+//        QwertUtils.pushShort(msgQueue, QwertUtils.calculateCRC(qwertMessage));
 
         // Return the data.
         return msgQueue.popAll();

@@ -61,20 +61,9 @@ abstract public class ReadDeltaNumericRequest extends QwertRequest {
 
     @Override
     protected void writeRequest(ByteQueue queue) {
-        queue.popAll();
-		byte[] aa = command.toUpperCase().getBytes();
-        queue.push(aa);
-      //  "~00P003STB"
- /*       queue.push('~');
-        queue.push('0');
-        queue.push('0');
-        queue.push('P');
-        queue.push('0');
-        queue.push('0');
-        queue.push('3');
-        queue.push('S');
-        queue.push('T');
-        queue.push('B');*/
+//        queue.popAll();
+		byte[] deltaByte = command.toUpperCase().getBytes();
+        queue.push(deltaByte);
     }
 
     /** {@inheritDoc} */
