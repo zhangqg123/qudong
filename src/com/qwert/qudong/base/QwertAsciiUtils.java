@@ -145,78 +145,6 @@ abstract public class QwertAsciiUtils{
         return msgQueue;
     }
 
-    public static ByteQueue getM7000ReturnMessage(ByteQueue queue) throws QudongTransportException {
-        // Validate that the message starts with the required indicator
-        byte b = queue.pop();
-        if (b != M7000_RETURN_START)
-            throw new QudongTransportException("Invalid message start: " + b);
-
-        // Find the end indicator
-        int end = queue.indexOf(END);
-        if (end == -1)
-            throw new ArrayIndexOutOfBoundsException();
-
-        // Remove the message from the queue, leaving the LRC there
-        byte[] asciiBytes = new byte[end];
-        queue.pop(asciiBytes);
-        ByteQueue msgQueue = new ByteQueue(asciiBytes);
-
-        // Pop the end indicator off of the queue
-        queue.pop(END.length);
-        // Convert to unascii
-        QwertAsciiUtils.fromAsciiM7000(msgQueue, msgQueue.size());
-
-        return msgQueue;
-    }
-
-    public static String getKstarReturnMessage(ByteQueue queue) throws QudongTransportException {
-        // Validate that the message starts with the required indicator
-        byte b = queue.pop();
-        if (b != KSTAR_RETURN_START)
-            throw new QudongTransportException("Invalid message start: " + b);
-
-        // Find the end indicator
-        int end = queue.indexOf(END);
-        if (end == -1)
-            throw new ArrayIndexOutOfBoundsException();
-
-        // Remove the message from the queue, leaving the LRC there
-        byte[] asciiBytes = new byte[end];
-        queue.pop(asciiBytes);
-        ByteQueue msgQueue = new ByteQueue(asciiBytes);
-
-        // Pop the end indicator off of the queue
-        queue.pop(END.length);
-        // Convert to unascii
-        String msg=QwertAsciiUtils.fromAsciiKstar(msgQueue, msgQueue.size());
-
-        return msg;
-    }
-    public static String getDeltaReturnMessage(ByteQueue queue) throws QudongTransportException {
-        // Validate that the message starts with the required indicator
-        byte b = queue.pop();
-        if (b != START)
-            throw new QudongTransportException("Invalid message start: " + b);
-        byte[] bur = new byte[6];
-        byte[] tmp = queue.popAll();
-        String msg = new String(tmp);
-    /*    queue.pop(bur,0,6);
-        ByteQueue burQueue = new ByteQueue(3);
-        burQueue.push(bur[3]);
-        burQueue.push(bur[4]);
-        burQueue.push(bur[5]);
-        String len = fromAsciiKstar(burQueue, burQueue.size());
-        int aa = Integer.parseInt(len);
-        byte[] msgQueue = new byte[aa];
-        queue.pop(msgQueue,0,aa);
-        queue.pop(queue.size());
-        queue.push(msgQueue); */
-        // Convert to unascii
-//        String msg=QwertAsciiUtils.fromAsciiKstar(queue, queue.size());
-
-        return msg;
-    }
-
     /**
      * <p>getAsciiData.</p>
      *
@@ -238,32 +166,6 @@ abstract public class QwertAsciiUtils{
 //        return null;
     }
 
-    public static byte[] get7000AsciiData(ByteQueue queue,int r) {
-        int unasciiLen = queue.size();
-        if(r==1) {
-            // Convert the message to ascii
-            queue.push(M7000_START);
-            toAscii2(queue, unasciiLen);
-        }
-        queue.push(END);
-
-        // Return the data.
-        return queue.popAll();
-//        return null;
-    }
-    public static byte[] getKstarAsciiData(ByteQueue queue,int r) {
-        int unasciiLen = queue.size();
-        if(r==1) {
-        }
-        queue.push(END);
-        // Return the data.
-        return queue.popAll();
-    }
-
-    public static byte[] getDeltaAsciiData(ByteQueue queue,int r) {
-//        queue.push(END);
-        return queue.popAll();
-    }
 
     public static byte[] toBytes(String s) throws Exception {
         return s.getBytes("ASCII");
@@ -298,10 +200,6 @@ abstract public class QwertAsciiUtils{
             writeAscii(queue, queue.pop());
     }
 
-//    private static void writeAscii2(ByteQueue to, byte b) {
- //       to.push(lookupAscii[b & 0xf0]);
-//        to.push(lookupAscii[b & 0x0f]);
-//    }
     public static void writeAscii(ByteQueue to, byte b) {
         to.push(lookupAscii[b & 0xf0]);
         to.push(lookupAscii[b & 0x0f]);
@@ -319,46 +217,7 @@ abstract public class QwertAsciiUtils{
         for (int i = 0; i < len; i++)
             queue.push(readAscii(queue));
     }
-    public static void fromAsciiM7000(ByteQueue queue, int asciiLen) {
-        int len = asciiLen ;
-        for (int i = 0; i < len; i++)
-            queue.push(readAsciiM7000(queue));
-    }
-    public static void fromAsciiDelta(ByteQueue queue, int asciiLen) {
-        int len = asciiLen ;
-        for (int i = 0; i < len; i++)
-            queue.push(readAsciiM7000(queue));
-    }
-    public static String fromAsciiKstar(ByteQueue queue, int asciiLen) {
-        int len = asciiLen ;
-        StringBuilder sb= new StringBuilder();
-        for (int i = 0; i < len; i++)
-            sb.append(readAsciiKstar(queue));
-        return sb.toString();
-    }
 
-    private static byte readAsciiM7000(ByteQueue from) {
-//        int a1 = (lookupUnascii[from.pop()] << 4);
-        byte a2 = lookupUnascii[from.pop()];
-        return a2;
-//        return (byte) ((lookupUnascii[from.pop()] << 4) | lookupUnascii[from.pop()]);
-    }
-    private static String readAsciiKstar(ByteQueue from) {
-//        int a1 = (lookupUnascii[from.pop()] << 4);
-        byte a1 = from.pop();
-        if(a1==46){
-            return ".";
-        }
-        if(a1==32){
-            return " ";
-        }
-        if(a1==59){
-            return ";";
-        }
-        byte a2 = lookupUnascii[a1];
-        String a3 = "" + a2;
-        return a3;
-    }
     private static byte readAscii(ByteQueue from) {
         return (byte) ((lookupUnascii[from.pop()] << 4) | lookupUnascii[from.pop()]);
     }
