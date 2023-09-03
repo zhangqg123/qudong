@@ -68,11 +68,4 @@ public class ReadM7000Request extends ReadM7000NumericRequest {
     public String toString() {
         return "ReadDianzongRequest [slaveId=" + slaveId + ", toString()=" + super.toString() + "]";
     }
-
-	@Override
-	public byte getFunctionCode() {
-        return FunctionCode.READ_M7000_REGISTERS;
-	}
-
-
 }

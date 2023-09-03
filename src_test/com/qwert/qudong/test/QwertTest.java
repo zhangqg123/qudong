@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import com.qwert.qudong.QwertFactory;
 import com.qwert.qudong.QwertMaster;
-import com.qwert.qudong.code.ProtocalCode;
 import com.qwert.qudong.exception.QudongTransportException;
 import com.qwert.qudong.ip.IpParameters;
 import com.qwert.qudong.msg.*;
@@ -14,7 +13,6 @@ import com.qwert.qudong.msg.delta.ReadDeltaRequest;
 import com.qwert.qudong.msg.delta.ReadDeltaResponse;
 import com.qwert.qudong.msg.kstar.ReadKstarRequest;
 import com.qwert.qudong.msg.kstar.ReadKstarResponse;
-import com.qwert.qudong.msg.protocal.ReadProtocalResponse;
 import com.qwert.qudong.serial.QwertSerialPortWrapper;
 
 public class QwertTest {
@@ -44,22 +42,15 @@ public class QwertTest {
         try {
             master.init();
             int slaveId = 3;
-            float ver=2.0f;
+            float ver=2.1f;
             int cid1 = 60;
-            int cid2 = 42;
+            int cid2 = 47;
             int lenid = 0;
-//            readDianzongTest(master, ver,slaveId, cid1,cid2,lenid);
-           read7000Test(master,1,6);
-//              readkstarTest(master,1,51,1);//"~00P003STB"
+            readDianzongTest(master, ver,slaveId, cid1,cid2,lenid);
+//           read7000Test(master,1,6);
+//              readkstarTest(master,1,"Q1");
 //            readDeltaTest(master,1,"~00P003STB");
 
- /*           BatchRead<String> batch = new BatchRead<String>();
-			batch.addLocator("10",	BaseLocator.holdingRegister(slaveId, 10, DataType.TWO_BYTE_INT_SIGNED));
-			batch.addLocator("21",	BaseLocator.holdingRegister(slaveId, 21, DataType.FOUR_BYTE_FLOAT));
-			BatchResults<String> results = master.send(batch);
-			System.out.println("::"+results);
-			String res = results.toString();*/
-            
         }
         finally {
             master.destroy();
@@ -89,12 +80,15 @@ public class QwertTest {
     public static void readDianzongTest(QwertMaster master,float ver, int slaveId, int cid1, int cid2,int lenid) {
         try {
             ReadDianzongRequest request = new ReadDianzongRequest(ver,slaveId, cid1, cid2,lenid);
-            ReadDianzongResponse response = (ReadDianzongResponse) master.send(request);
+            ReadResponse response = (ReadResponse) master.send(request);
 
             if (response.isException())
                 System.out.println("Exception response: message=" + response.getExceptionMessage());
-            else
-                System.out.println(""+Arrays.toString(response.getShortData()));
+            else{
+                byte[] tmpData = response.getData();
+                String strDelta = new String(tmpData);
+                System.out.println("dianzong data:"+strDelta);
+            }
         }
         catch (QudongTransportException e) {
             e.printStackTrace();
@@ -119,15 +113,19 @@ public class QwertTest {
         }
     }
 
-    public static void readkstarTest(QwertMaster master,int slaveId, int cid1,int cid2) {
+    public static void readkstarTest(QwertMaster master,int slaveId, String cmd) {
         try {
-            ReadKstarRequest request = new ReadKstarRequest(slaveId, cid1,cid2);
-            ReadKstarResponse response = (ReadKstarResponse) master.send(request);
+            ReadKstarRequest request = new ReadKstarRequest(slaveId, cmd);
+       //     ReadKstarResponse response = (ReadKstarResponse) master.send(request);
+            ReadResponse response = (ReadResponse) master.send(request);
 
             if (response.isException())
                 System.out.println("Exception response: message=" + response.getExceptionMessage());
-            else
-                System.out.println(response.getMessage());
+            else{
+                byte[] tmpData = response.getData();
+                String strDelta = new String(tmpData);
+                System.out.println("M7000 data:"+strDelta);
+            }
         }
         catch (QudongTransportException e) {
             e.printStackTrace();

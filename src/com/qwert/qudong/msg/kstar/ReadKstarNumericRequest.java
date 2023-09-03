@@ -22,6 +22,7 @@ package com.qwert.qudong.msg.kstar;
 
 import com.qwert.qudong.ProcessImage;
 import com.qwert.qudong.Qwert;
+import com.qwert.qudong.base.QwertAsciiUtils;
 import com.qwert.qudong.base.QwertUtils;
 import com.qwert.qudong.exception.QudongTransportException;
 import com.qwert.qudong.msg.QwertRequest;
@@ -34,27 +35,24 @@ import com.qwert.qudong.sero.util.queue.ByteQueue;
  * @version 5.0.0
  */
 abstract public class ReadKstarNumericRequest extends QwertRequest {
-	private int cid1;
-    private int cid2;
+	private String cmd;
 
     /**
      * <p>Constructor for ReadDianzongNumericRequest.</p>
      *
      * @param slaveId a int.
-     * @param startOffset a int.
-     * @param numberOfRegisters a int.
      * @throws QudongTransportException if any.
      */
-    public ReadKstarNumericRequest(int slaveId, int cid1,int cid2) throws QudongTransportException {
+
+    public ReadKstarNumericRequest(int slaveId, String cmd) throws QudongTransportException {
         super(slaveId);
-        this.cid1 = cid1;
-        this.cid1 = cid2;
+        this.cmd=cmd;
     }
 
     /** {@inheritDoc} */
     @Override
     public void validate(Qwert modbus) throws QudongTransportException {
-        QwertUtils.validateOffset(cid1);
+        QwertUtils.validateOffset(slaveId);
     }
 
     public ReadKstarNumericRequest(int slaveId) throws QudongTransportException {
@@ -63,15 +61,14 @@ abstract public class ReadKstarNumericRequest extends QwertRequest {
 
     @Override
     protected void writeRequest(ByteQueue queue) {
-        queue.popAll();
-        queue.push('Q');
-        queue.push('1');
+        byte[] kstarByte = cmd.toUpperCase().getBytes();
+        queue.push(kstarByte);
+        queue.push(QwertAsciiUtils.END);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void readRequest(ByteQueue queue) {
-        cid1 = queue.popInt(queue.pop());
     }
 
     /**
@@ -104,6 +101,6 @@ abstract public class ReadKstarNumericRequest extends QwertRequest {
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "ReadKstarNumericRequest [cid1=" + cid1  + "]";
+        return "ReadKstarNumericRequest [cmd=" + cmd  + "]";
     }
 }

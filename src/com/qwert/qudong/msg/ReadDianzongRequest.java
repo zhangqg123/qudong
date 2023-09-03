@@ -31,29 +31,19 @@ import com.qwert.qudong.exception.QudongTransportException;
  * @version 5.0.0
  */
 public class ReadDianzongRequest extends ReadDianzongNumericRequest {
-	private float ver;
     /**
      * <p>Constructor for ReadDianzongRequest.</p>
      *
      * @param slaveId a int.
-     * @param startOffset a int.
-     * @param numberOfRegisters a int.
      * @throws com.qwert.qudong.exception.QudongTransportException if any.
      */
     public ReadDianzongRequest(float ver,int slaveId, int cid1, int cid2,int lenid)
             throws QudongTransportException {
         super(ver,slaveId, cid1, cid2,lenid);
-        this.ver=ver;
     }
 
     ReadDianzongRequest(int slaveId) throws QudongTransportException {
         super(slaveId);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public byte getFunctionCode() {
-        return FunctionCode.READ_DIANZONG_REGISTERS;
     }
 
     @Override
@@ -75,7 +65,7 @@ public class ReadDianzongRequest extends ReadDianzongNumericRequest {
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "ReadDianzongRequest [slaveId=" + slaveId + ", getFunctionCode()=" + getFunctionCode()
+        return "ReadDianzongRequest [slaveId=" + slaveId
                 + ", toString()=" + super.toString() + "]";
     }
 

@@ -37,13 +37,11 @@ public class ReadKstarRequest extends ReadKstarNumericRequest {
      * <p>Constructor for ReadDianzongRequest.</p>
      *
      * @param slaveId a int.
-     * @param startOffset a int.
-     * @param numberOfRegisters a int.
      * @throws QudongTransportException if any.
      */
-    public ReadKstarRequest(int slaveId, int cid1, int cid2)
+    public ReadKstarRequest(int slaveId, String cmd )
             throws QudongTransportException {
-        super(slaveId,cid1,cid2);
+        super(slaveId,cmd);
     }
 
     public ReadKstarRequest(int slaveId) throws QudongTransportException {
@@ -73,11 +71,4 @@ public class ReadKstarRequest extends ReadKstarNumericRequest {
     public String toString() {
         return "ReadKstarRequest [slaveId=" + slaveId + ", toString()=" + super.toString() + "]";
     }
-
-	@Override
-	public byte getFunctionCode() {
-        return FunctionCode.READ_KSTAR_REGISTERS;
-	}
-
-
 }

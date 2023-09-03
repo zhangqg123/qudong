@@ -43,11 +43,6 @@ public class ReportSlaveIdResponse extends QwertResponse {
         this.data = data;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public byte getFunctionCode() {
-        return FunctionCode.REPORT_SLAVE_ID;
-    }
 
     /** {@inheritDoc} */
     @Override

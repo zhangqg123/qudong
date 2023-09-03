@@ -46,11 +46,6 @@ public class ExceptionResponse extends QwertResponse {
         setException(exceptionCode);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public byte getFunctionCode() {
-        return functionCode;
-    }
 
     /** {@inheritDoc} */
     @Override

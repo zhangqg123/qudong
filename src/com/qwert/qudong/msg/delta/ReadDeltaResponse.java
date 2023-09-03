@@ -38,17 +38,12 @@ public class ReadDeltaResponse extends ReadResponse {
     public ReadDeltaResponse(int slaveId) throws QudongTransportException {
         super(slaveId);
     }
-    /** {@inheritDoc} */
-    @Override
-    public byte getFunctionCode() {
-        return FunctionCode.READ_DELTA_REGISTERS;
-    }
 
     /** {@inheritDoc} */
     @Override
     public String toString() {
         return "ReadDianzongResponse [exceptionCode=" + exceptionCode + ", slaveId=" + slaveId
-                + ", getFunctionCode()=" + getFunctionCode() + ", isException()=" + isException()
+                + ", isException()=" + isException()
                 + ", getExceptionMessage()=" + getExceptionMessage() + ", getExceptionCode()=" + getExceptionCode()
                 + ", toString()=" + super.toString(true) + "]";
     }

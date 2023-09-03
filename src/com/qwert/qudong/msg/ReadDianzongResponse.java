@@ -43,17 +43,12 @@ public class ReadDianzongResponse extends ReadResponse {
         super(slaveId);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public byte getFunctionCode() {
-        return FunctionCode.READ_DIANZONG_REGISTERS;
-    }
 
     /** {@inheritDoc} */
     @Override
     public String toString() {
         return "ReadDianzongResponse [exceptionCode=" + exceptionCode + ", slaveId=" + slaveId
-                + ", getFunctionCode()=" + getFunctionCode() + ", isException()=" + isException()
+                + ", isException()=" + isException()
                 + ", getExceptionMessage()=" + getExceptionMessage() + ", getExceptionCode()=" + getExceptionCode()
                 + ", toString()=" + super.toString(true) + "]";
     }

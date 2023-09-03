@@ -13,5 +13,4 @@ public interface OutgoingMessage {
      * @return byte array representing the serialization of the request
      */
     byte[] getMessageData();
-    byte[] getMessageData2(int r);
 }

@@ -55,8 +55,10 @@ public class DCHKSUM {
 		}
 		//求和的值模65536后余
 		remainder = plus % 65536;
-		int a1 = ~remainder+1;
-		return Integer.toHexString(a1);
+		int drc = (~remainder+1 & 0xffff);
+		return Integer.toHexString(drc);
+//		byte drc = (byte) (~remainder+1 & 0xff);
+//		return drc;
 	}
 	
 	public static String chkLength(int value){
@@ -73,17 +75,15 @@ public class DCHKSUM {
 //		String putIn = "1203400456ABCDFE";
 //		String putIn = "20014043E00200";
 //		String putIn = "210360470000";
-//		String putIn = "21036000d03000d201f40014003200000000012c0096032000c800e60078";
+		String putIn = "21036000d03000d201f40014003200000000012c0096032000c800e60078";
+//		String putIn = "~21036000d03000d201f40014003200000000012c0096032000c800e60078f3f3\r\n";
 //		String putIn= "$016\r"; //7000d
 //		String putIn= "Q1\r"; //科士达
 
 //		byte[] aa = putIn.toUpperCase().getBytes();
 //		System.out.println(aa);
-		int a = 32;
-		char cc = (char) a;
-		System.out.println(cc);
 
-/*		
+
 		String ret = null;
 		try {
 			ret = chkDrc2(putIn.toUpperCase());
@@ -93,7 +93,7 @@ public class DCHKSUM {
 		}
 	//	byte i = (byte) (0xff & (value >> 8));
 	//	String ret = chkLength(48);
-		System.out.println(ret);*/
+		System.out.println(ret);
 	}
 	
 }

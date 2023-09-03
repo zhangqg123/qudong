@@ -49,16 +49,11 @@ abstract public class DianzongMessage extends SerialMessage {
      * @return an array of {@link byte} objects.
      * @throws Exception 
      */
-    public byte[] getMessageData2(int r) {
-        ByteQueue queue = new ByteQueue();
-        qwertMessage.write2(queue,r);
-        return QwertAsciiUtils.getAsciiData(queue,r);
-    }
-    
+
     public byte[] getMessageData() {
         ByteQueue queue = new ByteQueue();
         qwertMessage.write(queue);
-        return QwertAsciiUtils.getAsciiData(queue,0);
+        return QwertAsciiUtils.getAsciiData(queue);
     }
 
 }

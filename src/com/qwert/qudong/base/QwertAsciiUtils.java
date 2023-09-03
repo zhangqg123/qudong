@@ -33,13 +33,13 @@ import com.qwert.qudong.sero.util.queue.ByteQueue;
  */
 abstract public class QwertAsciiUtils{
 //    private static final byte START = ':';
-//    private static final byte[] END = { '\r', '\n' };
+    public static final byte[] END = { '\r', '\n' };
     public static final byte START = '~';
     public static final byte M7000_START = '$';
     public static final byte KSTAR_START = 'Q';
     public static final byte KSTAR_RETURN_START = '(';
     public static final byte M7000_RETURN_START = '!';
-    public static final byte[] END = { '\r' };
+//    public static final byte[] END = { '\r' };
 
     public static ByteQueue getUnDianzongMessage(ByteQueue queue) throws QudongTransportException {
         // Validate that the message starts with the required indicator
@@ -223,36 +223,14 @@ abstract public class QwertAsciiUtils{
      * @param queue a {@link com.qwert.qudong.sero.util.queue.ByteQueue} object.
      * @return an array of {@link byte} objects.
      */
-    public static byte[] getAsciiData(ByteQueue queue,int r) {
+    public static byte[] getAsciiData(ByteQueue queue) {
         int unasciiLen = queue.size();
-        int drc = 0;
-        if(r==2) {
-        	byte[] bur = new byte[12];
-        	byte[] bur2=null;
-			queue.pop(bur,0,12);
-            toAscii(queue, queue.size());
-            bur2=queue.popAll();
-			queue=new ByteQueue(bur);
-			toAscii2(queue,queue.size());
-        	queue.push(bur2);
-	        drc = calculateDRC(queue);
-//	        unasciiLen = queue.size();
-	        bur2=queue.popAll();
-	        queue.push(START);
-	        queue.push(bur2);
-//	        toAscii(queue, unasciiLen);
-        }
-		if(r==1) {
-			unasciiLen = queue.size();
-	        toAscii2(queue, unasciiLen);
-			drc = calculateDRC(queue);
-	
-	        // Convert the message to ascii
-	        queue.push(START);
-	        toAscii2(queue, unasciiLen);
-        }
-        String tmp = Integer.toHexString(drc);
-        writeAscii2(queue, drc);
+        toAscii(queue, unasciiLen);
+     //   byte drc = calculateDRC(queue);
+        // Convert the message to ascii
+        queue.push(START);
+        toAscii(queue, unasciiLen);
+    //    writeAscii(queue, drc);
         queue.push(END);
 
         // Return the data.
@@ -307,8 +285,8 @@ abstract public class QwertAsciiUtils{
 		}
 		//求和的值模65536后余
 		remainder = plus % 65536;
-		int a1 = (~remainder+1);
-		return a1;
+		int drc =  ~remainder+1 & 0xffff;
+		return drc;
 	}
 
     public static void toAscii2(ByteQueue queue, int unasciiLen) {
@@ -320,11 +298,11 @@ abstract public class QwertAsciiUtils{
             writeAscii(queue, queue.pop());
     }
 
-    private static void writeAscii2(ByteQueue to, byte b) {
+//    private static void writeAscii2(ByteQueue to, byte b) {
  //       to.push(lookupAscii[b & 0xf0]);
-        to.push(lookupAscii[b & 0x0f]);
-    }
-    private static void writeAscii(ByteQueue to, byte b) {
+//        to.push(lookupAscii[b & 0x0f]);
+//    }
+    public static void writeAscii(ByteQueue to, byte b) {
         to.push(lookupAscii[b & 0xf0]);
         to.push(lookupAscii[b & 0x0f]);
     }

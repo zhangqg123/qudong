@@ -56,7 +56,7 @@ abstract public class QwertMessage {
      *
      * @return a byte.
      */
-    abstract public byte getFunctionCode();
+//    abstract public byte getFunctionCode();
 //    abstract public float getVer();
 //    abstract public byte[] getRetData();
 

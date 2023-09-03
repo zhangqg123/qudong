@@ -61,29 +61,10 @@ public class EncapMessage extends IpMessage {
 
         // Write the CRC
 //        QwertUtils.pushShort(msgQueue, QwertUtils.calculateCRC(qwertMessage));
-
+     //   getAsciiData()
         // Return the data.
         return msgQueue.popAll();
     }
 
-    public byte[] getMessageData2(int r) {
-        ByteQueue queue = new ByteQueue();
-        qwertMessage.write2(queue,r);
-        byte[] ret = null;
-        if (qwertMessage instanceof ReadDianzongRequest || qwertMessage instanceof ReadDianzongResponse) {
-            ret = QwertAsciiUtils.getAsciiData(queue, r);
-        }
-        if (qwertMessage instanceof ReadM7000Request || qwertMessage instanceof ReadM7000Response) {
-            ret = QwertAsciiUtils.get7000AsciiData(queue, r);
-        }
-        if (qwertMessage instanceof ReadKstarRequest || qwertMessage instanceof ReadKstarResponse) {
-            ret = QwertAsciiUtils.getKstarAsciiData(queue, r);
-        }
-        if (qwertMessage instanceof ReadDeltaRequest || qwertMessage instanceof ReadDeltaResponse) {
-            ret = QwertAsciiUtils.getDeltaAsciiData(queue, r);
-//            ret = queue.popAll();
-        }
-        return ret;
-    }
-    
+
 }

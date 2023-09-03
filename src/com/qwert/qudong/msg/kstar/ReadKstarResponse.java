@@ -48,17 +48,12 @@ public class ReadKstarResponse extends ReadResponse {
         super(slaveId);
         this.msg=msg;
     }
-    /** {@inheritDoc} */
-    @Override
-    public byte getFunctionCode() {
-        return FunctionCode.READ_KSTAR_REGISTERS;
-    }
 
     /** {@inheritDoc} */
     @Override
     public String toString() {
         return "ReadDianzongResponse [exceptionCode=" + exceptionCode + ", slaveId=" + slaveId
-                + ", getFunctionCode()=" + getFunctionCode() + ", isException()=" + isException()
+                + ", isException()=" + isException()
                 + ", getExceptionMessage()=" + getExceptionMessage() + ", getExceptionCode()=" + getExceptionCode()
                 + ", toString()=" + super.toString(true) + "]";
     }

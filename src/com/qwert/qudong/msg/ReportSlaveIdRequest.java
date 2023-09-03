@@ -71,9 +71,4 @@ public class ReportSlaveIdRequest extends QwertRequest {
         return new ReportSlaveIdResponse(slaveId, processImage.getReportSlaveIdData());
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public byte getFunctionCode() {
-        return FunctionCode.REPORT_SLAVE_ID;
-    }
 }

@@ -38,8 +38,6 @@ public class ReadDeltaRequest extends ReadDeltaNumericRequest {
      * <p>Constructor for ReadDianzongRequest.</p>
      *
      * @param slaveId a int.
-     * @param startOffset a int.
-     * @param numberOfRegisters a int.
      * @throws QudongTransportException if any.
      */
     public ReadDeltaRequest(int slaveId, String command)
@@ -72,9 +70,4 @@ public class ReadDeltaRequest extends ReadDeltaNumericRequest {
     public String toString() {
         return "ReadDeltaRequest [slaveId=" + slaveId + ", toString()=" + super.toString() + "]";
     }
-
-	@Override
-	public byte getFunctionCode() {
-        return FunctionCode.READ_DELTA_REGISTERS;
-	}
 }

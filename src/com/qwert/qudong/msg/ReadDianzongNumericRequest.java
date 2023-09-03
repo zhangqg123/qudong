@@ -27,6 +27,8 @@ import com.qwert.qudong.base.QwertUtils;
 import com.qwert.qudong.exception.QudongTransportException;
 import com.qwert.qudong.sero.util.queue.ByteQueue;
 
+import java.io.UnsupportedEncodingException;
+
 /**
  * <p>Abstract ReadDianzongNumericRequest class.</p>
  *
@@ -69,35 +71,24 @@ abstract public class ReadDianzongNumericRequest extends QwertRequest {
 
     @Override
     protected void writeRequest(ByteQueue queue) {
-    	byte[] bur = new byte[2];
-		queue.pop(bur,0,2);
-        StringBuilder qs=new StringBuilder();
-    	String[] tmp = (""+this.ver).split("\\.");
-
-        QwertUtils.pushByte(queue, Integer.valueOf(tmp[0]));
-        QwertUtils.pushByte(queue, Integer.valueOf(tmp[1]));
-        queue.push(bur);
-    	String tmp1 = "0"+(""+cid1).substring(0,1);
-    	String tmp2 = "0"+(""+cid1).substring(1,2);
-    	if(cid1>=10) {
-    		queue.push(tmp1);
-   			queue.push(tmp2);
-    	}else {
-    		queue.push(tmp1);
-    	}
-    	String tmp3 = "0"+(""+cid2).substring(0,1);
-    	String tmp4 = "0"+(""+cid2).substring(1,2);
-    	if(cid2>=10) {
-    		queue.push(tmp3);
-   			queue.push(tmp4);
-    	}else {
-    		queue.push(tmp3);
-    	}
-        queue.push("00");
-        queue.push("00");
-        queue.push("00");
-        queue.push("00");
-//        QwertAsciiUtils.getAsciiData(queue,1);
+        int tmpVer = (int) (ver * 10);
+        String strQueue = "";
+        strQueue+=""+tmpVer;
+        strQueue+=(""+slaveId).length()>1?""+slaveId:"0"+slaveId;
+        strQueue+=cid1;
+        strQueue+=cid2;
+        strQueue+="0000";
+        try {
+            queue.push(strQueue.getBytes("ASCII"));
+            int drc = QwertAsciiUtils.calculateDRC(queue);
+            QwertAsciiUtils.writeAscii2(queue, drc);
+            byte[] tmpQueue = queue.popAll();
+            queue.push(QwertAsciiUtils.START);
+            queue.push(tmpQueue);
+            queue.push(QwertAsciiUtils.END);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     /** {@inheritDoc} */

@@ -23,11 +23,9 @@ package com.qwert.qudong.msg;
 
 import com.qwert.qudong.base.QwertAsciiUtils;
 import com.qwert.qudong.code.ExceptionCode;
-import com.qwert.qudong.code.ProtocalCode;
 import com.qwert.qudong.exception.QudongTransportException;
 import com.qwert.qudong.exception.SlaveIdNotEqual;
 import com.qwert.qudong.msg.delta.ReadDeltaResponse;
-import com.qwert.qudong.msg.protocal.ReadProtocalResponse;
 import com.qwert.qudong.sero.util.queue.ByteQueue;
 
 import java.lang.invoke.SwitchPoint;
@@ -76,12 +74,7 @@ abstract public class QwertResponse extends QwertMessage {
             response.read(msgQueue, false);
             // Pop the end indicator off of the queue
         } */
-        ReadResponse response=new ReadResponse(1) {
-            @Override
-            public byte getFunctionCode() {
-                return 0;
-            }
-        };
+        ReadResponse response=new ReadResponse(1) {};
         response.read(queue, false);
         return response;
     }
@@ -128,11 +121,9 @@ abstract public class QwertResponse extends QwertMessage {
     protected void writeImpl(ByteQueue queue) {
 
         if (isException()) {
-            queue.push((byte) (getFunctionCode() + MAX_FUNCTION_CODE));
             queue.push(exceptionCode);
         }
         else {
-            queue.push(getFunctionCode());
             writeResponse(queue);
         }
     }

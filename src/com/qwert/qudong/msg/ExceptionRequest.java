@@ -78,11 +78,6 @@ public class ExceptionRequest extends QwertRequest {
         return getResponseInstance(slaveId);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public byte getFunctionCode() {
-        return functionCode;
-    }
 
     /**
      * <p>Getter for the field <code>exceptionCode</code>.</p>

@@ -39,17 +39,12 @@ public class ReadM7000Response extends ReadResponse {
         super(slaveId);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public byte getFunctionCode() {
-        return FunctionCode.READ_M7000_REGISTERS;
-    }
 
     /** {@inheritDoc} */
     @Override
     public String toString() {
         return "ReadDianzongResponse [exceptionCode=" + exceptionCode + ", slaveId=" + slaveId
-                + ", getFunctionCode()=" + getFunctionCode() + ", isException()=" + isException()
+                + ", isException()=" + isException()
                 + ", getExceptionMessage()=" + getExceptionMessage() + ", getExceptionCode()=" + getExceptionCode()
                 + ", toString()=" + super.toString(true) + "]";
     }
